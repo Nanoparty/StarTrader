@@ -11,13 +11,19 @@ type Mission struct {
 	ShortName   string
 	Description string
 	Type        string // "Mining", "Transport", or "Combat"
+	Level       int    // 1-10, affects payout
 	Payout      int    // Money earned for completion
 	Minutes     int    // Duration minutes (0-4)
 	Seconds     int    // Duration seconds (0-59)
 	Status      string // "Idle", "In Progress", or "Complete"
 }
 
-func GenerateMiningMission() Mission {
+func GenerateMiningMission(level int) Mission {
+	if level < 1 {
+		level = 1
+	} else if level > 10 {
+		level = 10
+	}
 	miningMissions := []struct{ Name, Desc string }{
 		{"Asteroid Extraction", "Extract valuable minerals from a dense asteroid field."},
 		{"Survey and Sample", "Survey a new asteroid and collect mineral samples."},
@@ -45,12 +51,13 @@ func GenerateMiningMission() Mission {
 	durationSec := rand.Intn(300) // 0 to 299 seconds
 	minutes := durationSec / 60
 	seconds := durationSec % 60
-	payout := (minutes*60 + seconds) * 20 // payout scaled to total seconds
+	payout := (minutes*60 + seconds) * 20 * level // payout scaled to seconds and level
 	selected := miningMissions[idx]
 	return Mission{
 		ShortName:   selected.Name,
 		Description: selected.Desc,
 		Type:        "Mining",
+		Level:       level,
 		Payout:      payout,
 		Minutes:     minutes,
 		Seconds:     seconds,
@@ -58,7 +65,12 @@ func GenerateMiningMission() Mission {
 	}
 }
 
-func GenerateCombatMission() Mission {
+func GenerateCombatMission(level int) Mission {
+	if level < 1 {
+		level = 1
+	} else if level > 10 {
+		level = 10
+	}
 	combatMissions := []struct{ Name, Desc string }{
 		{"Pirate Hunt", "Track down and eliminate a pirate ship in the sector."},
 		{"Convoy Escort", "Defend a civilian convoy from raiders."},
@@ -86,12 +98,13 @@ func GenerateCombatMission() Mission {
 	durationSec := rand.Intn(300) // 0 to 299 seconds
 	minutes := durationSec / 60
 	seconds := durationSec % 60
-	payout := (minutes*60 + seconds) * 20 // payout scaled to total seconds
+	payout := (minutes*60 + seconds) * 20 * level // payout scaled to seconds and level
 	selected := combatMissions[idx]
 	return Mission{
 		ShortName:   selected.Name,
 		Description: selected.Desc,
 		Type:        "Combat",
+		Level:       level,
 		Payout:      payout,
 		Minutes:     minutes,
 		Seconds:     seconds,
@@ -99,19 +112,29 @@ func GenerateCombatMission() Mission {
 	}
 }
 
-func GenerateRandomMission() Mission {
+func GenerateRandomMission(level int) Mission {
+	if level < 1 {
+		level = 1
+	} else if level > 10 {
+		level = 10
+	}
 	typeIdx := rand.Intn(3)
 	switch typeIdx {
 	case 0:
-		return GenerateMiningMission()
+		return GenerateMiningMission(level)
 	case 1:
-		return GenerateCombatMission()
+		return GenerateCombatMission(level)
 	default:
-		return GenerateTransportMission()
+		return GenerateTransportMission(level)
 	}
 }
 
-func GenerateTransportMission() Mission {
+func GenerateTransportMission(level int) Mission {
+	if level < 1 {
+		level = 1
+	} else if level > 10 {
+		level = 10
+	}
 	transportMissions := []struct{ Name, Desc string }{
 		{"Medical Supply Run", "Deliver urgent medical supplies to a nearby outpost."},
 		{"VIP Transport", "Escort a VIP passenger to another station safely."},
@@ -139,15 +162,25 @@ func GenerateTransportMission() Mission {
 	durationSec := rand.Intn(300) // 0 to 299 seconds
 	minutes := durationSec / 60
 	seconds := durationSec % 60
-	payout := (minutes*60 + seconds) * 20 // payout scaled to total seconds
+	payout := (minutes*60 + seconds) * 20 * level // payout scaled to total seconds and level
 	selected := transportMissions[idx]
 	return Mission{
 		ShortName:   selected.Name,
 		Description: selected.Desc,
 		Type:        "Transport",
+		Level:       level,
 		Payout:      payout,
 		Minutes:     minutes,
 		Seconds:     seconds,
 		Status:      "Idle",
 	}
+}
+
+// GenerateRandomMissionList returns a slice of n random missions at the given level.
+func GenerateRandomMissionList(n int, level int) []Mission {
+	missions := make([]Mission, 0, n)
+	for i := 0; i < n; i++ {
+		missions = append(missions, GenerateRandomMission(level))
+	}
+	return missions
 }

@@ -29,19 +29,60 @@ type Pilot struct {
 	TransportSkill int
 	CombatSkill int
 	MiningSkill int
+	Level int // 1 to 10
 	AssignedShip *Ship
 	AssignedMission *Mission // nil if not assigned
 	Status string // "Idle", "In Progress", or "Complete"
 }
 
-// GenerateRandomMissionList returns a slice of n random missions.
-func GenerateRandomMissionList(n int) []Mission {
-	missions := make([]Mission, 0, n)
-	for i := 0; i < n; i++ {
-		missions = append(missions, GenerateRandomMission())
+// GenerateRandomPilot returns a random Pilot at the given level (1-10).
+// Each pilot leans toward one skill (Transport, Combat, or Mining), which is significantly higher than the others.
+// All skills scale with level, and price scales with total skill.
+func GenerateRandomPilot(level int) Pilot {
+	if level < 1 {
+		level = 1
+	} else if level > 10 {
+		level = 10
 	}
-	return missions
+	name := utils.Generate_Pilot_Name()
+	dominant := rand.Intn(3) // 0 = Transport, 1 = Combat, 2 = Mining
+	base := 2 + rand.Intn(3) + level // base 2-4, +level
+	domBonus := 4 + rand.Intn(3) + (level-1)*2 // dominant skill bonus: 4-6 + scaling
+	otherSpread := 2 + rand.Intn(3) + (level-1) // 2-4 + scaling
+
+	var transport, combat, mining int
+	switch dominant {
+	case 0: // Transport
+		transport = base + domBonus
+		combat = base + rand.Intn(otherSpread)
+		mining = base + rand.Intn(otherSpread)
+	case 1: // Combat
+		combat = base + domBonus
+		transport = base + rand.Intn(otherSpread)
+		mining = base + rand.Intn(otherSpread)
+	case 2: // Mining
+		mining = base + domBonus
+		transport = base + rand.Intn(otherSpread)
+		combat = base + rand.Intn(otherSpread)
+	}
+	totalSkill := transport + combat + mining
+	price := 20000 + totalSkill*4000 + level*3000 + rand.Intn(5000) // price scales with skills and level
+	return Pilot{
+		Name: name,
+		Price: price,
+		TransportSkill: transport,
+		CombatSkill: combat,
+		MiningSkill: mining,
+		Level: level,
+		AssignedShip: nil,
+		AssignedMission: nil,
+		Status: "Idle",
+	}
 }
+
+// GenerateRandomMissionList returns a slice of n random missions at the given level.
+// This function is now defined in mission.go to avoid dependency issues.
+// Please use the GenerateRandomMissionList from mission.go.
 
 // GenerateRandomShipList returns a slice of n random ships, all at the given level (e.g., the station's relationship level).
 func GenerateRandomShipList(n int, level int) []Ship {
@@ -52,25 +93,11 @@ func GenerateRandomShipList(n int, level int) []Ship {
 	return ships
 }
 
-// GenerateRandomPilotList returns a slice of n random pilots.
-func GenerateRandomPilotList(n int) []Pilot {
+// GenerateRandomPilotList returns a slice of n random pilots at the given level.
+func GenerateRandomPilotList(n int, level int) []Pilot {
 	pilots := make([]Pilot, 0, n)
 	for i := 0; i < n; i++ {
-		name := utils.Generate_Pilot_Name()
-		price := 30000 + rand.Intn(30000) // 30k - 60k
-		transport := 4 + rand.Intn(7) // 4-10
-		combat := 2 + rand.Intn(8)    // 2-9
-		mining := 2 + rand.Intn(8)    // 2-9
-		pilots = append(pilots, Pilot{
-			Name: name,
-			Price: price,
-			TransportSkill: transport,
-			CombatSkill: combat,
-			MiningSkill: mining,
-			AssignedShip: nil,
-			AssignedMission: nil,
-			Status: "Idle",
-		})
+		pilots = append(pilots, GenerateRandomPilot(level))
 	}
 	return pilots
 }
