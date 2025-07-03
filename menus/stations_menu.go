@@ -20,25 +20,32 @@ func StationsMenuIntro(m *Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
 }
 
-func StationSelected(station Station) func() {
+func StationSelected(station *Station) func() {
 	return func() {
-		selectedDetailStation = &station
+		selectedDetailStation = station
 		CurrentMenu = &StationDetailMenu
 	}
 }
 
 var StationsMenuOptions []MenuItem
 var StationsMenu Menu
+var StationsByName = make(map[string]*Station)
 
 func ShowStationsMenu(sector string) {
 	SelectedSector = sector
 	StationsMenuOptions = []MenuItem{}
-	for _, station := range KnownStations[sector] {
-		stationCopy := station // avoid closure capture bug
-		stationObj := Station{Name: stationCopy}
+	for _, stationName := range KnownStations[sector] {
+		var stationPtr *Station
+		if existing, ok := StationsByName[stationName]; ok {
+			stationPtr = existing
+		} else {
+			station := &Station{Name: stationName}
+			StationsByName[stationName] = station
+			stationPtr = station
+		}
 		StationsMenuOptions = append(StationsMenuOptions, MenuItem{
-			Name:     stationCopy,
-			Callback: StationSelected(stationObj),
+			Name:     stationName,
+			Callback: StationSelected(stationPtr),
 		})
 	}
 	StationsMenuOptions = append(StationsMenuOptions, MenuItem{Name: "Back", Callback: StationsMenuBack})
