@@ -39,7 +39,7 @@ func ShowStationsMenu(sector string) {
 		if existing, ok := StationsByName[stationName]; ok {
 			stationPtr = existing
 		} else {
-			station := &Station{Name: stationName}
+			station := NewStation(stationName)
 			StationsByName[stationName] = station
 			stationPtr = station
 		}

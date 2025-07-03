@@ -2,7 +2,6 @@ package menus
 
 import (
 	"fmt"
-	"startrader/utils"
 )
 
 var selectedDetailStation *Station
@@ -14,29 +13,15 @@ func StationDetailMenuIntro(m *Menu) {
 	}
 	// Generate missions if this is the first visit
 	if len(selectedDetailStation.Missions) == 0 {
-		for i := 0; i < 6; i++ {
-			selectedDetailStation.Missions = append(selectedDetailStation.Missions, GenerateRandomMission())
-		}
+		selectedDetailStation.Missions = GenerateRandomMissionList(6)
 	}
 	// Generate ships for sale if this is the first visit
 	if len(selectedDetailStation.ShipsForSale) == 0 {
-		selectedDetailStation.ShipsForSale = []Ship{
-			{utils.Generate_Combat_Ship_Name(), 100000, "Combat", 10, 10, 10, 10, 10, nil, "Idle", nil},
-			{utils.Generate_Combat_Ship_Name(), 250000, "Combat", 10, 10, 10, 10, 10, nil, "Idle", nil},
-			{utils.Generate_Combat_Ship_Name(), 400000, "Combat", 10, 10, 10, 10, 10, nil, "Idle", nil},
-			{utils.Generate_Combat_Ship_Name(), 750000, "Combat", 10, 10, 10, 10, 10, nil, "Idle", nil},
-			{utils.Generate_Combat_Ship_Name(), 1200000, "Combat", 10, 10, 10, 10, 10, nil, "Idle", nil},
-		}
+		selectedDetailStation.ShipsForSale = GenerateRandomShipList(5, selectedDetailStation.RelationshipLevel)
 	}
 	// Generate pilots for sale if this is the first visit
 	if len(selectedDetailStation.PilotsForSale) == 0 {
-		selectedDetailStation.PilotsForSale = []Pilot{
-			{utils.Generate_Pilot_Name(), 50000, 8, 9, 2, nil, nil, "Idle"},
-			{utils.Generate_Pilot_Name(), 40000, 7, 6, 5, nil, nil, "Idle"},
-			{utils.Generate_Pilot_Name(), 30000, 5, 4, 7, nil, nil, "Idle"},
-			{utils.Generate_Pilot_Name(), 60000, 10, 4, 3, nil, nil, "Idle"},
-			{utils.Generate_Pilot_Name(), 55000, 6, 8, 6, nil, nil, "Idle"},
-		}
+		selectedDetailStation.PilotsForSale = GenerateRandomPilotList(5)
 	}
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Printf("\rStation: %s\n", selectedDetailStation.Name)
