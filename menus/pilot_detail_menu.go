@@ -12,14 +12,18 @@ func PilotDetailMenuIntro(m *Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Printf("\rPilot: %s\n", selectedDetailPilot.Name)
 	fmt.Printf("\rPrice: $%d\n", selectedDetailPilot.Price)
-	fmt.Printf("\rTransport Skill: %d\n", selectedDetailPilot.TransportSkill)
-	fmt.Printf("\rCombat Skill: %d\n", selectedDetailPilot.CombatSkill)
-	fmt.Printf("\rMining Skill: %d\n", selectedDetailPilot.MiningSkill)
+	fmt.Printf("\rSkills (T/C/M): %d/%d/%d\n", selectedDetailPilot.TransportSkill, selectedDetailPilot.CombatSkill, selectedDetailPilot.MiningSkill)
 	if selectedDetailPilot.AssignedShip != nil {
 		fmt.Printf("\rAssigned Ship: %s\n", selectedDetailPilot.AssignedShip.Name)
 	} else {
 		fmt.Println("\rAssigned Ship: None")
 	}
+	if selectedDetailPilot.AssignedMission != nil {
+		fmt.Printf("\rAssigned Mission: %s (%s)\n", selectedDetailPilot.AssignedMission.ShortName, selectedDetailPilot.AssignedMission.Type)
+	} else {
+		fmt.Println("\rAssigned Mission: None")
+	}
+	fmt.Printf("\rStatus: %s\n", selectedDetailPilot.Status)
 	fmt.Println("\r----------------------------------------------------------------------------")
 }
 

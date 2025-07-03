@@ -13,7 +13,7 @@ func CompanyPilotsIntro(m *Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Println("\r" + globals.CompanyName + " Pilots:")
 	fmt.Println("\r----------------------------------------------------------------------------")
-	fmt.Printf("\r%-20s | %-10s | %-10s | %-10s | %-20s\n", "Name", "Transport", "Combat", "Mining", "Assigned Ship")
+	fmt.Printf("\r%-20s | %-10s | %-20s | %-12s\n", "Name", "Skills (T/C/M)", "Assigned Ship", "Status")
 	fmt.Println("\r----------------------------------------------------------------------------")
 }
 
@@ -30,16 +30,17 @@ func CompanyPilotsBack() {
 
 func BuildCompanyPilotsMenuOptions() {
 	CompanyPilotOptions = []MenuItem{}
-	for _, pilot := range CompanyPilots {
-		pilotCopy := pilot // avoid closure capture bug
+	for i := range CompanyPilots {
+		pilotPtr := &CompanyPilots[i]
 		shipName := "None"
-		if pilotCopy.AssignedShip != nil {
-			shipName = pilotCopy.AssignedShip.Name
+		if pilotPtr.AssignedShip != nil {
+			shipName = pilotPtr.AssignedShip.Name
 		}
-		menuName := fmt.Sprintf("%-20s | %-10d | %-10d | %-10d | %-20s", pilotCopy.Name, pilotCopy.TransportSkill, pilotCopy.CombatSkill, pilotCopy.MiningSkill, shipName)
+		skills := fmt.Sprintf("%d/%d/%d", pilotPtr.TransportSkill, pilotPtr.CombatSkill, pilotPtr.MiningSkill)
+		menuName := fmt.Sprintf("%-20s | %-14s | %-20s | %-12s", pilotPtr.Name, skills, shipName, pilotPtr.Status)
 		CompanyPilotOptions = append(CompanyPilotOptions, MenuItem{
 			Name:     menuName,
-			Callback: PilotSelected(pilotCopy),
+			Callback: PilotSelected(*pilotPtr),
 		})
 	}
 	CompanyPilotOptions = append(CompanyPilotOptions, MenuItem{Name: "Back", Callback: CompanyPilotsBack})

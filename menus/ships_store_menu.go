@@ -9,17 +9,19 @@ var ShipsForSale []Ship
 
 func init() {
 	ShipsForSale = []Ship{
-		{utils.Generate_Combat_Ship_Name(), 100000, "Combat", 10, 10, 10, 10, 10, nil, "Idle"},
-		{utils.Generate_Combat_Ship_Name(), 250000, "Combat", 10, 10, 10, 10, 10, nil, "Idle"},
-		{utils.Generate_Combat_Ship_Name(), 400000, "Combat", 10, 10, 10, 10, 10, nil, "Idle"},
-		{utils.Generate_Combat_Ship_Name(), 750000, "Combat", 10, 10, 10, 10, 10, nil, "Idle"},
-		{utils.Generate_Combat_Ship_Name(), 1200000, "Combat", 10, 10, 10, 10, 10, nil, "Idle"},
+		{utils.Generate_Combat_Ship_Name(), 100000, "Combat", 10, 10, 10, 10, 10, nil, "Idle", nil},
+		{utils.Generate_Combat_Ship_Name(), 250000, "Combat", 10, 10, 10, 10, 10, nil, "Idle", nil},
+		{utils.Generate_Combat_Ship_Name(), 400000, "Combat", 10, 10, 10, 10, 10, nil, "Idle", nil},
+		{utils.Generate_Combat_Ship_Name(), 750000, "Combat", 10, 10, 10, 10, 10, nil, "Idle", nil},
+		{utils.Generate_Combat_Ship_Name(), 1200000, "Combat", 10, 10, 10, 10, 10, nil, "Idle", nil},
 	}
 }
 
 func ShipsStoreMenuIntro(m *Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Println("\rSpaceships for Sale:")
+	fmt.Println("\r----------------------------------------------------------------------------")
+	fmt.Printf("\r%-20s | %-10s | %-10s\n", "Name", "Type", "Price")
 	fmt.Println("\r----------------------------------------------------------------------------")
 	if len(ShipsForSale) == 0 {
 		fmt.Println("\rThere are no more ships available for purchase at this point in time.")
@@ -59,7 +61,7 @@ func BuildShipsStoreMenuOptions() {
 	for _, ship := range ShipsForSale {
 		shipCopy := ship // avoid closure capture bug
 		ShipsStoreMenuOptions = append(ShipsStoreMenuOptions, MenuItem{
-			Name:     fmt.Sprintf("%s - $%d", ship.Name, ship.Price),
+			Name:     fmt.Sprintf("%-20s | %-10s | $%-9d", ship.Name, ship.Type, ship.Price),
 			Callback: ShipPurchasePrompt(shipCopy),
 		})
 	}
@@ -74,7 +76,18 @@ func ShipPurchaseNo() {
 
 func ShipPurchaseMenuIntro(m *Menu) {
 	if selectedShip != nil {
-		fmt.Printf("\rPurchase %s for $%d?\n", selectedShip.Name, selectedShip.Price)
+		fmt.Println("\r----------------------------------------------------------------------------")
+		fmt.Println("\rShip Details:")
+		fmt.Println("\r----------------------------------------------------------------------------")
+		fmt.Printf("\rName: %s\n", selectedShip.Name)
+		fmt.Printf("\rType: %s\n", selectedShip.Type)
+		fmt.Printf("\rPrice: $%d\n", selectedShip.Price)
+		fmt.Printf("\rStorage: %d\n", selectedShip.Storage)
+		fmt.Printf("\rSpeed: %d\n", selectedShip.Speed)
+		fmt.Printf("\rHealth: %d/%d\n", selectedShip.CurrentHealth, selectedShip.MaxHealth)
+		fmt.Printf("\rDamage: %d\n", selectedShip.Damage)
+		fmt.Println("\r----------------------------------------------------------------------------")
+		fmt.Printf("\rPurchase this ship for $%d?\n", selectedShip.Price)
 	} else {
 		fmt.Println("\rNo ship selected.")
 	}
@@ -97,7 +110,7 @@ func init() {
 	for _, ship := range ShipsForSale {
 		shipCopy := ship // avoid closure capture bug
 		ShipsStoreMenuOptions = append(ShipsStoreMenuOptions, MenuItem{
-			Name:     fmt.Sprintf("%s - $%d", ship.Name, ship.Price),
+			Name:     fmt.Sprintf("%-20s | %-10s | $%-9d", ship.Name, ship.Type, ship.Price),
 			Callback: ShipPurchasePrompt(shipCopy),
 		})
 	}

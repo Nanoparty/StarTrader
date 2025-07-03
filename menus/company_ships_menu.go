@@ -13,7 +13,7 @@ func CompanyShipsIntro(m *Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Println("\r" + globals.CompanyName + " Ships:")
 	fmt.Println("\r----------------------------------------------------------------------------")
-	fmt.Printf("\r%-20s | %-15s | %-10s\n", "Name", "Assigned Pilot", "Status")
+	fmt.Printf("\r%-20s | %-10s | %-15s | %-10s\n", "Name", "Type", "Assigned Pilot", "Status")
 	fmt.Println("\r----------------------------------------------------------------------------")
 }
 
@@ -33,12 +33,13 @@ func BuildCompanyShipsMenuOptions() {
 	CompanyShipOptions = []MenuItem{}
 	for _, ship := range CompanyShips {
 		shipCopy := ship // avoid closure capture bug
-		pilotName := "None"
+
+		assignedPilot := "None"
 		if shipCopy.AssignedPilot != nil {
-			pilotName = shipCopy.AssignedPilot.Name
+			assignedPilot = shipCopy.AssignedPilot.Name
 		}
 		status := shipCopy.Status
-		menuName := fmt.Sprintf("%-20s | %-15s | %-10s", shipCopy.Name, pilotName, status)
+		menuName := fmt.Sprintf("%-20s | %-10s | %-15s | %-10s", shipCopy.Name, shipCopy.Type, assignedPilot, status)
 		CompanyShipOptions = append(CompanyShipOptions, MenuItem{
 			Name:     menuName,
 			Callback: ShipSelected(shipCopy),

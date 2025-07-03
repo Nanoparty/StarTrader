@@ -11,6 +11,7 @@ type Ship struct {
 	Damage int
 	AssignedPilot *Pilot
 	Status string // "Idle", "In Progress", or "Complete"
+	AssignedMission *Mission // nil if not assigned
 }
 
 type Pilot struct {
@@ -20,4 +21,6 @@ type Pilot struct {
 	CombatSkill int
 	MiningSkill int
 	AssignedShip *Ship
+	AssignedMission *Mission // nil if not assigned
+	Status string // "Idle", "In Progress", or "Complete"
 }

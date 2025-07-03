@@ -10,6 +10,8 @@ func ShipDetailMenuIntro(m *Menu) {
 		return
 	}
 	fmt.Println("\r----------------------------------------------------------------------------")
+	fmt.Println("\rShip Details:")
+	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Printf("\rShip: %s\n", selectedDetailShip.Name)
 	fmt.Printf("\rType: %s\n", selectedDetailShip.Type)
 	fmt.Printf("\rPrice: $%d\n", selectedDetailShip.Price)
@@ -22,10 +24,17 @@ func ShipDetailMenuIntro(m *Menu) {
 	} else {
 		fmt.Println("\rAssigned Pilot: None")
 	}
+	if selectedDetailShip.AssignedMission != nil {
+		fmt.Printf("\rAssigned Mission: %s (%s)\n", selectedDetailShip.AssignedMission.ShortName, selectedDetailShip.AssignedMission.Type)
+	} else {
+		fmt.Println("\rAssigned Mission: None")
+	}
+	fmt.Printf("\rStatus: %s\n", selectedDetailShip.Status)
 	fmt.Println("\r----------------------------------------------------------------------------")
 }
 
 func ShipDetailBack() {
+	BuildCompanyShipsMenuOptions()
 	CurrentMenu = &CompanyShipsMenu
 }
 

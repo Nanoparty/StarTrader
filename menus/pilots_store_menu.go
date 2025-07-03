@@ -12,11 +12,11 @@ var selectedPilot *Pilot
 
 func init() {
 	PilotsForSale = []Pilot{
-		{utils.Generate_Pilot_Name(), 50000, 8, 9, 2, nil},
-		{utils.Generate_Pilot_Name(), 40000, 7, 6, 5, nil},
-		{utils.Generate_Pilot_Name(), 30000, 5, 4, 7, nil},
-		{utils.Generate_Pilot_Name(), 60000, 10, 4, 3, nil},
-		{utils.Generate_Pilot_Name(), 55000, 6, 8, 6, nil},
+		{utils.Generate_Pilot_Name(), 50000, 8, 9, 2, nil, nil, "Idle"},
+		{utils.Generate_Pilot_Name(), 40000, 7, 6, 5, nil, nil, "Idle"},
+		{utils.Generate_Pilot_Name(), 30000, 5, 4, 7, nil, nil, "Idle"},
+		{utils.Generate_Pilot_Name(), 60000, 10, 4, 3, nil, nil, "Idle"},
+		{utils.Generate_Pilot_Name(), 55000, 6, 8, 6, nil, nil, "Idle"},
 	}
 
 	PilotPurchaseMenu = Menu{
