@@ -45,6 +45,7 @@ func init() {
 	CompanyMenuOptions = []MenuItem{
 		{Name: "Ships", Callback: Ships},
 		{Name: "Pilots", Callback: Pilots},
+		{Name: "Active Missions", Callback: func() { BuildActiveMissionsMenuOptions(); CurrentMenu = &ActiveMissionsMenu }},
 		{Name: "Information", Callback: func() { CurrentMenu = &CompanyInformationMenu }},
 
 		{Name: "Locations", Callback: Locations},

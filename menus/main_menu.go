@@ -21,6 +21,7 @@ func MainMenuIntro(m *Menu) {
 
 
 func NewGame() {
+	StartMissionTimers()
 	CurrentMenu = &CompanyMenu
 }
 

@@ -12,7 +12,9 @@ type Mission struct {
 	Description string
 	Type        string // "Mining", "Transport", or "Combat"
 	Payout      int    // Money earned for completion
-	Duration    int    // Duration in minutes (1-5)
+	Minutes     int    // Duration minutes (0-4)
+	Seconds     int    // Duration seconds (0-59)
+	Status      string // "Idle", "In Progress", or "Complete"
 }
 
 func GenerateMiningMission() Mission {
@@ -40,15 +42,19 @@ func GenerateMiningMission() Mission {
 	}
 	rand.Seed(time.Now().UnixNano())
 	idx := rand.Intn(len(miningMissions))
-	duration := rand.Intn(5) + 1
-	payout := duration * 1000
+	durationSec := rand.Intn(300) // 0 to 299 seconds
+	minutes := durationSec / 60
+	seconds := durationSec % 60
+	payout := (minutes*60 + seconds) * 20 // payout scaled to total seconds
 	selected := miningMissions[idx]
 	return Mission{
 		ShortName:   selected.Name,
 		Description: selected.Desc,
 		Type:        "Mining",
 		Payout:      payout,
-		Duration:    duration,
+		Minutes:     minutes,
+		Seconds:     seconds,
+		Status:      "Idle",
 	}
 }
 
@@ -77,15 +83,19 @@ func GenerateCombatMission() Mission {
 	}
 	rand.Seed(time.Now().UnixNano())
 	idx := rand.Intn(len(combatMissions))
-	duration := rand.Intn(5) + 1
-	payout := duration * 1000
+	durationSec := rand.Intn(300) // 0 to 299 seconds
+	minutes := durationSec / 60
+	seconds := durationSec % 60
+	payout := (minutes*60 + seconds) * 20 // payout scaled to total seconds
 	selected := combatMissions[idx]
 	return Mission{
 		ShortName:   selected.Name,
 		Description: selected.Desc,
 		Type:        "Combat",
 		Payout:      payout,
-		Duration:    duration,
+		Minutes:     minutes,
+		Seconds:     seconds,
+		Status:      "Idle",
 	}
 }
 
@@ -126,14 +136,18 @@ func GenerateTransportMission() Mission {
 	}
 	rand.Seed(time.Now().UnixNano())
 	idx := rand.Intn(len(transportMissions))
-	duration := rand.Intn(5) + 1 // 1-5 minutes
-	payout := duration * 1000
+	durationSec := rand.Intn(300) // 0 to 299 seconds
+	minutes := durationSec / 60
+	seconds := durationSec % 60
+	payout := (minutes*60 + seconds) * 20 // payout scaled to total seconds
 	selected := transportMissions[idx]
 	return Mission{
 		ShortName:   selected.Name,
 		Description: selected.Desc,
 		Type:        "Transport",
 		Payout:      payout,
-		Duration:    duration,
+		Minutes:     minutes,
+		Seconds:     seconds,
+		Status:      "Idle",
 	}
 }

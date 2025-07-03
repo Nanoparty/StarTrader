@@ -17,7 +17,7 @@ func StationMissionDetailMenuIntro(m *Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Printf("\rName:        %s\n", selectedStationMission.ShortName)
 	fmt.Printf("\rType:        %s\n", selectedStationMission.Type)
-	fmt.Printf("\rDuration:    %d minutes\n", selectedStationMission.Duration)
+	fmt.Printf("\rDuration:    %d min %d sec\n", selectedStationMission.Minutes, selectedStationMission.Seconds)
 	fmt.Printf("\rPayout:      $%d\n", selectedStationMission.Payout)
 	fmt.Printf("\rDescription: %s\n", selectedStationMission.Description)
 	fmt.Println("\r----------------------------------------------------------------------------")

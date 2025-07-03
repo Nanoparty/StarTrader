@@ -65,9 +65,10 @@ func AssignMissionYes() {
 		selectedAssignMissionShip.Status = "In Progress"
 		selectedAssignMissionShip.AssignedPilot.AssignedMission = selectedStationMission
 		selectedAssignMissionShip.AssignedPilot.Status = "In Progress"
+		selectedStationMission.Status = "In Progress"
 		// Remove mission from stationMissions
 		for i, m := range stationMissions {
-			if m.ShortName == selectedStationMission.ShortName && m.Type == selectedStationMission.Type && m.Duration == selectedStationMission.Duration && m.Payout == selectedStationMission.Payout {
+			if m.ShortName == selectedStationMission.ShortName && m.Type == selectedStationMission.Type && fmt.Sprintf("%d min %d sec", m.Minutes, m.Seconds) == fmt.Sprintf("%d min %d sec", selectedStationMission.Minutes, selectedStationMission.Seconds) && m.Payout == selectedStationMission.Payout {
 				stationMissions = append(stationMissions[:i], stationMissions[i+1:]...)
 				break
 			}

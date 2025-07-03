@@ -11,7 +11,7 @@ func BuildStationMissionMenuOptions() []MenuItem {
 	options := []MenuItem{}
 	for i, mission := range stationMissions {
 		missionCopy := mission // avoid closure capture bug
-		label := fmt.Sprintf("%-3d | %-22s | %-9s | %-8d | $%-7d", i+1, missionCopy.ShortName, missionCopy.Type, missionCopy.Duration, missionCopy.Payout)
+		label := fmt.Sprintf("%-3d | %-22s | %-9s | %d min %d sec | $%-7d", i+1, missionCopy.ShortName, missionCopy.Type, missionCopy.Minutes, missionCopy.Seconds, missionCopy.Payout)
 		options = append(options, MenuItem{
 			Name: label,
 			Callback: func(m Mission) func() {
