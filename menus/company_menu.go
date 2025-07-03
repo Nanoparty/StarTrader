@@ -21,7 +21,7 @@ func Information() {
 }
 
 func Store() {
-	CurrentMenu = &StoreMenu
+	CurrentMenu = &CompanyMenu
 }
 
 func Locations() {
@@ -49,8 +49,7 @@ func init() {
 		{Name: "Information", Callback: func() { CurrentMenu = &CompanyInformationMenu }},
 
 		{Name: "Locations", Callback: Locations},
-		{Name: "Store", Callback: Store},
-		{Name: "Quit Game", Callback: QuitGame},
+			{Name: "Quit Game", Callback: QuitGame},
 	}
 	CompanyMenu = Menu{
 		Name:    "Company Menu",

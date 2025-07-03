@@ -44,11 +44,11 @@ func StationDetailMenuIntro(m *Menu) {
 }
 
 func StationDetailShips() {
-	// TODO: Implement station ships view
+	ShowStationShipsStoreMenu()
 }
 
 func StationDetailPilots() {
-	// TODO: Implement station pilots view
+	ShowStationPilotsStoreMenu()
 }
 
 func StationDetailMissions() {

@@ -2,21 +2,39 @@ package menus
 
 import (
 	"fmt"
-	"startrader/utils"
 )
 
-var PilotsForSale []Pilot
+func ShowStationPilotsStoreMenu() {
+	if selectedDetailStation == nil {
+		fmt.Println("\rNo station selected.")
+		return
+	}
+	BuildStationPilotsStoreMenuOptions()
+	CurrentMenu = &PilotsStoreMenu
+}
+
+func BuildStationPilotsStoreMenuOptions() {
+	PilotsStoreMenuOptions = []MenuItem{}
+	for i, pilot := range selectedDetailStation.PilotsForSale {
+		pilotCopy := pilot // avoid closure capture bug
+		menuName := fmt.Sprintf("%-20s | $%-7d | %-8d | %-8d | %-8d", pilotCopy.Name, pilotCopy.Price, pilotCopy.TransportSkill, pilotCopy.CombatSkill, pilotCopy.MiningSkill)
+		PilotsStoreMenuOptions = append(PilotsStoreMenuOptions, MenuItem{
+			Name:     menuName,
+			Callback: PilotPurchasePrompt(pilotCopy, i),
+		})
+	}
+	PilotsStoreMenuOptions = append(PilotsStoreMenuOptions, MenuItem{Name: "Back", Callback: PilotsStoreBack})
+	PilotsStoreMenu.Options = PilotsStoreMenuOptions
+}
+
 var PilotsStoreMenuOptions []MenuItem
 var PilotsStoreMenu Menu
 var selectedPilot *Pilot
 
 func init() {
-	PilotsForSale = []Pilot{
-		{utils.Generate_Pilot_Name(), 50000, 8, 9, 2, nil, nil, "Idle"},
-		{utils.Generate_Pilot_Name(), 40000, 7, 6, 5, nil, nil, "Idle"},
-		{utils.Generate_Pilot_Name(), 30000, 5, 4, 7, nil, nil, "Idle"},
-		{utils.Generate_Pilot_Name(), 60000, 10, 4, 3, nil, nil, "Idle"},
-		{utils.Generate_Pilot_Name(), 55000, 6, 8, 6, nil, nil, "Idle"},
+	PilotsStoreMenu = Menu{
+		Name:  "Pilots Store Menu",
+		Intro: PilotsStoreMenuIntro,
 	}
 
 	PilotPurchaseMenu = Menu{
@@ -31,7 +49,7 @@ func PilotsStoreMenuIntro(m *Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Println("\rPilots for Hire:")
 	fmt.Println("\r----------------------------------------------------------------------------")
-	if len(PilotsForSale) == 0 {
+	if selectedDetailStation == nil || len(selectedDetailStation.PilotsForSale) == 0 {
 		fmt.Println("\rThere are no more pilots available for hire at this point in time.")
 		fmt.Println("\r----------------------------------------------------------------------------")
 		return
@@ -40,9 +58,9 @@ func PilotsStoreMenuIntro(m *Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
 }
 
-func PilotPurchasePrompt(pilot Pilot) func() {
+func PilotPurchasePrompt(pilot Pilot, i int) func() {
 	return func() {
-		selectedPilot = &pilot
+		selectedPilot = &selectedDetailStation.PilotsForSale[i]
 		CurrentMenu = &PilotPurchaseMenu
 	}
 }
@@ -52,9 +70,9 @@ func PilotPurchaseYes() {
 		pilotCopy := *selectedPilot
 		CompanyPilots = append(CompanyPilots, pilotCopy)
 		// Remove the purchased pilot from PilotsForSale
-		for i, p := range PilotsForSale {
+		for i, p := range selectedDetailStation.PilotsForSale {
 			if p.Name == pilotCopy.Name && p.Price == pilotCopy.Price {
-				PilotsForSale = append(PilotsForSale[:i], PilotsForSale[i+1:]...)
+				selectedDetailStation.PilotsForSale = append(selectedDetailStation.PilotsForSale[:i], selectedDetailStation.PilotsForSale[i+1:]...)
 				break
 			}
 		}
@@ -88,12 +106,12 @@ var PilotPurchaseMenu Menu
 
 func BuildPilotsStoreMenuOptions() {
 	PilotsStoreMenuOptions = []MenuItem{}
-	for _, pilot := range PilotsForSale {
+	for i, pilot := range selectedDetailStation.PilotsForSale {
 		pilotCopy := pilot // avoid closure capture bug
 		menuName := fmt.Sprintf("%-20s | $%-7d | %-8d | %-8d | %-8d", pilotCopy.Name, pilotCopy.Price, pilotCopy.TransportSkill, pilotCopy.CombatSkill, pilotCopy.MiningSkill)
 		PilotsStoreMenuOptions = append(PilotsStoreMenuOptions, MenuItem{
 			Name:     menuName,
-			Callback: PilotPurchasePrompt(pilotCopy),
+			Callback: PilotPurchasePrompt(pilotCopy, i),
 		})
 	}
 	PilotsStoreMenuOptions = append(PilotsStoreMenuOptions, MenuItem{Name: "Back", Callback: PilotsStoreBack})
@@ -101,15 +119,15 @@ func BuildPilotsStoreMenuOptions() {
 }
 
 func PilotsStoreBack() {
-	CurrentMenu = &StoreMenu
+	CurrentMenu = &StationDetailMenu
 }
 
 func init() {
-	BuildPilotsStoreMenuOptions()
+	PilotsStoreMenuOptions = []MenuItem{}
 	PilotsStoreMenu = Menu{
 		Name:    "Pilots Store Menu",
 		Intro:   PilotsStoreMenuIntro,
-		Options: PilotsStoreMenuOptions,
+		Options: PilotsStoreMenuOptions, // will be set dynamically
 		Back:    PilotsStoreBack,
 	}
 }

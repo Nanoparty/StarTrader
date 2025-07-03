@@ -2,19 +2,30 @@ package menus
 
 import (
 	"fmt"
-	"startrader/utils"
 )
 
-var ShipsForSale []Ship
+// ShipsForSale is now per-station, see selectedDetailStation.ShipsForSale
 
-func init() {
-	ShipsForSale = []Ship{
-		{utils.Generate_Combat_Ship_Name(), 100000, "Combat", 10, 10, 10, 10, 10, nil, "Idle", nil},
-		{utils.Generate_Combat_Ship_Name(), 250000, "Combat", 10, 10, 10, 10, 10, nil, "Idle", nil},
-		{utils.Generate_Combat_Ship_Name(), 400000, "Combat", 10, 10, 10, 10, 10, nil, "Idle", nil},
-		{utils.Generate_Combat_Ship_Name(), 750000, "Combat", 10, 10, 10, 10, 10, nil, "Idle", nil},
-		{utils.Generate_Combat_Ship_Name(), 1200000, "Combat", 10, 10, 10, 10, 10, nil, "Idle", nil},
+func ShowStationShipsStoreMenu() {
+	if selectedDetailStation == nil {
+		fmt.Println("\rNo station selected.")
+		return
 	}
+	BuildStationShipsStoreMenuOptions()
+	CurrentMenu = &ShipsStoreMenu
+}
+
+func BuildStationShipsStoreMenuOptions() {
+	ShipsStoreMenuOptions = []MenuItem{}
+	for _, ship := range selectedDetailStation.ShipsForSale {
+		shipCopy := ship // avoid closure capture bug
+		ShipsStoreMenuOptions = append(ShipsStoreMenuOptions, MenuItem{
+			Name:     fmt.Sprintf("%-20s | %-10s | $%-9d", ship.Name, ship.Type, ship.Price),
+			Callback: ShipPurchasePrompt(shipCopy),
+		})
+	}
+	ShipsStoreMenuOptions = append(ShipsStoreMenuOptions, MenuItem{Name: "Back", Callback: ShipsStoreBack})
+	ShipsStoreMenu.Options = ShipsStoreMenuOptions
 }
 
 func ShipsStoreMenuIntro(m *Menu) {
@@ -23,7 +34,7 @@ func ShipsStoreMenuIntro(m *Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Printf("\r%-20s | %-10s | %-10s\n", "Name", "Type", "Price")
 	fmt.Println("\r----------------------------------------------------------------------------")
-	if len(ShipsForSale) == 0 {
+	if selectedDetailStation == nil || len(selectedDetailStation.ShipsForSale) == 0 {
 		fmt.Println("\rThere are no more ships available for purchase at this point in time.")
 		fmt.Println("\r----------------------------------------------------------------------------")
 		return
@@ -44,9 +55,9 @@ func ShipPurchaseYes() {
 		shipCopy := *selectedShip
 		CompanyShips = append(CompanyShips, shipCopy)
 		// Remove the purchased ship from ShipsForSale
-		for i, s := range ShipsForSale {
+		for i, s := range selectedDetailStation.ShipsForSale {
 			if s.Name == shipCopy.Name && s.Price == shipCopy.Price {
-				ShipsForSale = append(ShipsForSale[:i], ShipsForSale[i+1:]...)
+				selectedDetailStation.ShipsForSale = append(selectedDetailStation.ShipsForSale[:i], selectedDetailStation.ShipsForSale[i+1:]...)
 				break
 			}
 		}
@@ -58,7 +69,7 @@ func ShipPurchaseYes() {
 
 func BuildShipsStoreMenuOptions() {
 	ShipsStoreMenuOptions = []MenuItem{}
-	for _, ship := range ShipsForSale {
+	for _, ship := range selectedDetailStation.ShipsForSale {
 		shipCopy := ship // avoid closure capture bug
 		ShipsStoreMenuOptions = append(ShipsStoreMenuOptions, MenuItem{
 			Name:     fmt.Sprintf("%-20s | %-10s | $%-9d", ship.Name, ship.Type, ship.Price),
@@ -107,18 +118,10 @@ var ShipsStoreMenu Menu
 
 func init() {
 	ShipsStoreMenuOptions = []MenuItem{}
-	for _, ship := range ShipsForSale {
-		shipCopy := ship // avoid closure capture bug
-		ShipsStoreMenuOptions = append(ShipsStoreMenuOptions, MenuItem{
-			Name:     fmt.Sprintf("%-20s | %-10s | $%-9d", ship.Name, ship.Type, ship.Price),
-			Callback: ShipPurchasePrompt(shipCopy),
-		})
-	}
-	ShipsStoreMenuOptions = append(ShipsStoreMenuOptions, MenuItem{Name: "Back", Callback: ShipsStoreBack})
 	ShipsStoreMenu = Menu{
 		Name:    "Ships Store Menu",
 		Intro:   ShipsStoreMenuIntro,
-		Options: ShipsStoreMenuOptions,
+		Options: ShipsStoreMenuOptions, // will be set dynamically
 		Back:    ShipsStoreBack,
 	}
 
@@ -131,7 +134,7 @@ func init() {
 }
 
 func ShipsStoreBack() {
-	CurrentMenu = &StoreMenu
+	CurrentMenu = &StationDetailMenu
 }
 	// End of file. All menu initialization is handled in the init() above.
 
