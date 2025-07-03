@@ -29,13 +29,46 @@ func ShipDetailBack() {
 	CurrentMenu = &CompanyShipsMenu
 }
 
-var ShipDetailMenuOptions = []MenuItem{
-	{Name: "Back", Callback: ShipDetailBack},
+func BuildShipDetailMenuOptions() []MenuItem {
+	options := []MenuItem{}
+	if selectedDetailShip != nil {
+		if selectedDetailShip.AssignedPilot == nil {
+			options = append(options, MenuItem{Name: "Assign Pilot", Callback: ShowUnassignedPilotsMenu})
+		} else {
+			options = append(options, MenuItem{Name: "Unassign Pilot", Callback: UnassignPilotFromShipInShipDetail})
+		}
+	}
+	options = append(options, MenuItem{Name: "Back", Callback: ShipDetailBack})
+	return options
 }
 
-var ShipDetailMenu = Menu{
-	Name:    "Ship Detail",
-	Intro:   ShipDetailMenuIntro,
-	Options: ShipDetailMenuOptions,
-	Back:    ShipDetailBack,
+func UnassignPilotFromShipInShipDetail() {
+	if selectedDetailShip != nil && selectedDetailShip.AssignedPilot != nil {
+		pilot := selectedDetailShip.AssignedPilot
+		selectedDetailShip.AssignedPilot = nil
+		for i := range CompanyPilots {
+			if &CompanyPilots[i] == pilot {
+				CompanyPilots[i].AssignedShip = nil
+				break
+			}
+		}
+	}
+	ShowShipDetailMenu()
 }
+
+var ShipDetailMenu Menu
+
+func ShowShipDetailMenu() {
+	ShipDetailMenu.Options = BuildShipDetailMenuOptions()
+	CurrentMenu = &ShipDetailMenu
+}
+
+func init() {
+	ShipDetailMenu = Menu{
+		Name:    "Ship Detail",
+		Intro:   ShipDetailMenuIntro,
+		Options: nil, // Set dynamically
+		Back:    ShipDetailBack,
+	}
+}
+

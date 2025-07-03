@@ -20,7 +20,7 @@ func CompanyShipsIntro(m *Menu) {
 func ShipSelected(ship Ship) func() {
 	return func() {
 		selectedDetailShip = &ship
-		CurrentMenu = &ShipDetailMenu
+		ShowShipDetailMenu()
 	}
 }
 
