@@ -20,9 +20,6 @@ func Information() {
 	fmt.Println("Information\n\r")
 }
 
-func Store() {
-	CurrentMenu = &CompanyMenu
-}
 
 func Locations() {
 	CurrentMenu = &SectorsMenu
