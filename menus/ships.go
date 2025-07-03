@@ -1,5 +1,7 @@
 package menus
 
+var CompanyMoney int = 10000
+
 type Ship struct {
 	Name string
 	Price int
