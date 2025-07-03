@@ -18,7 +18,6 @@ func SectorsMenuIntro(m *Menu) {
 }
 
 func SectorSelected(sector string) func() {
-	AddPreviousMenu()
 	return func() {
 		ShowStationsMenu(sector)
 	}
@@ -41,9 +40,10 @@ func init() {
 		Name:    "Sectors Menu",
 		Intro:   SectorsMenuIntro,
 		Options: SectorsMenuOptions,
+		Back:    SectorsMenuBack,
 	}
 }
 
 func SectorsMenuBack() {
-	CurrentMenu = GetPreviousMenu()
+	CurrentMenu = &CompanyMenu
 }

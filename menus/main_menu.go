@@ -21,7 +21,6 @@ func MainMenuIntro(m *Menu) {
 
 
 func NewGame() {
-	AddPreviousMenu()
 	CurrentMenu = &CompanyMenu
 }
 
@@ -60,4 +59,5 @@ var MainMenu = Menu {
 	Name:		"Main Menu",
 	Intro:		MainMenuIntro,
 	Options: 	MainMenuOptions,
+	Back:		Exit,
 }

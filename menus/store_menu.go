@@ -17,7 +17,7 @@ func StorePilots() {
 }
 
 func StoreBack() {
-	CurrentMenu = GetPreviousMenu()
+	CurrentMenu = &CompanyMenu
 }
 
 var StoreMenuOptions []MenuItem
@@ -33,5 +33,6 @@ func init() {
 		Name:    "Store Menu",
 		Intro:   StoreMenuIntro,
 		Options: StoreMenuOptions,
+		Back:    StoreBack,
 	}
 }

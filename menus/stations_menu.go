@@ -44,10 +44,11 @@ func ShowStationsMenu(sector string) {
 		Name:    "Stations Menu",
 		Intro:   StationsMenuIntro,
 		Options: StationsMenuOptions,
+		Back:    StationsMenuBack,
 	}
 	CurrentMenu = &StationsMenu
 }
 
 func StationsMenuBack() {
-	CurrentMenu = GetPreviousMenu()
+	CurrentMenu = &SectorsMenu
 }

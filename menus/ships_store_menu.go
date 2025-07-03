@@ -5,20 +5,15 @@ import (
 	"startrader/utils"
 )
 
-type ShipForSale struct {
-	Name  string
-	Price int
-}
-
-var ShipsForSale []ShipForSale
+var ShipsForSale []Ship
 
 func init() {
-	ShipsForSale = []ShipForSale{
-		{utils.Generate_Combat_Ship_Name(), 100000},
-		{utils.Generate_Combat_Ship_Name(), 250000},
-		{utils.Generate_Combat_Ship_Name(), 400000},
-		{utils.Generate_Combat_Ship_Name(), 750000},
-		{utils.Generate_Combat_Ship_Name(), 1200000},
+	ShipsForSale = []Ship{
+		{utils.Generate_Combat_Ship_Name(), 100000, "Combat", 10, 10, 10, 10, 10, nil},
+		{utils.Generate_Combat_Ship_Name(), 250000, "Combat", 10, 10, 10, 10, 10, nil},
+		{utils.Generate_Combat_Ship_Name(), 400000, "Combat", 10, 10, 10, 10, 10, nil},
+		{utils.Generate_Combat_Ship_Name(), 750000, "Combat", 10, 10, 10, 10, 10, nil},
+		{utils.Generate_Combat_Ship_Name(), 1200000, "Combat", 10, 10, 10, 10, 10, nil},
 	}
 }
 
@@ -28,9 +23,9 @@ func ShipsStoreMenuIntro(m *Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
 }
 
-var selectedShip *ShipForSale
+var selectedShip *Ship
 
-func ShipPurchasePrompt(ship ShipForSale) func() {
+func ShipPurchasePrompt(ship Ship) func() {
 	return func() {
 		selectedShip = &ship
 		CurrentMenu = &ShipPurchaseMenu
@@ -39,7 +34,8 @@ func ShipPurchasePrompt(ship ShipForSale) func() {
 
 func ShipPurchaseYes() {
 	if selectedShip != nil {
-		CompanyShips = append(CompanyShips, selectedShip.Name)
+		shipCopy := *selectedShip
+		CompanyShips = append(CompanyShips, shipCopy)
 	}
 	selectedShip = nil
 	CurrentMenu = &ShipsStoreMenu
@@ -86,11 +82,12 @@ func init() {
 		Name:    "Ships Store Menu",
 		Intro:   ShipsStoreMenuIntro,
 		Options: ShipsStoreMenuOptions,
+		Back:    ShipsStoreBack,
 	}
 }
 
 func ShipsStoreBack() {
-	CurrentMenu = GetPreviousMenu()
+	CurrentMenu = &StoreMenu
 }
 	// End of file. All menu initialization is handled in the init() above.
 

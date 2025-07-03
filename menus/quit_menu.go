@@ -32,5 +32,6 @@ func init() {
 		Name:    "Quit Game?",
 		Intro:   QuitMenuIntro,
 		Options: QuitMenuOptions,
+		Back:    QuitNo,
 	}
 }

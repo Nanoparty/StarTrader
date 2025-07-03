@@ -7,7 +7,6 @@ import (
 
 
 func Ships() {
-	AddPreviousMenu()
 	CurrentMenu = &CompanyShipsMenu
 }
 
@@ -20,12 +19,10 @@ func Information() {
 }
 
 func Store() {
-	AddPreviousMenu()
 	CurrentMenu = &StoreMenu
 }
 
 func Locations() {
-	AddPreviousMenu()
 	CurrentMenu = &SectorsMenu
 }
 
@@ -55,5 +52,6 @@ func init() {
 		Name:    "Company Menu",
 		Intro:   CompanyMenuIntro,
 		Options: CompanyMenuOptions,
+		Back:    QuitGame,
 	}
 }
