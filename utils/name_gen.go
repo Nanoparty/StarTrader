@@ -3,10 +3,10 @@ package utils
 import (
 	"os"
 	// "fmt"
-	"log"
-	"time"
-	"math/rand"
 	"bufio"
+	"log"
+	"math/rand"
+	"time"
 )
 
 func Random_Name_From_File(inputFile string) string {
@@ -35,7 +35,7 @@ func Random_Name_From_File(inputFile string) string {
 	return name
 }
 
-func Generate_Employee_Name() string {
+func Generate_Pilot_Name() string {
 	return Random_Name_From_File("names/names_employees.txt")
 }
 

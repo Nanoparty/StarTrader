@@ -10,6 +10,7 @@ type Ship struct {
 	MaxHealth int
 	Damage int
 	AssignedPilot *Pilot
+	Status string // "Idle", "In Progress", or "Complete"
 }
 
 type Pilot struct {

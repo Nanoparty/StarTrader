@@ -13,7 +13,8 @@ func StoreShips() {
 }
 
 func StorePilots() {
-	fmt.Println("Store Pilots\n\r")
+	BuildPilotsStoreMenuOptions()
+	CurrentMenu = &PilotsStoreMenu
 }
 
 func StoreBack() {

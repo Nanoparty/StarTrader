@@ -7,11 +7,13 @@ import (
 
 
 func Ships() {
+	BuildCompanyShipsMenuOptions()
 	CurrentMenu = &CompanyShipsMenu
 }
 
 func Pilots() {
-	fmt.Println("Pilots\n\r")
+	BuildCompanyPilotsMenuOptions()
+	CurrentMenu = &CompanyPilotsMenu
 }
 
 func Information() {
