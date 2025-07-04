@@ -52,6 +52,15 @@ func BuildPilotDetailMenuOptions() []MenuItem {
 
 func UnassignPilotFromShip() {
 	if selectedDetailPilot != nil && selectedDetailPilot.AssignedShip != nil {
+		// Prevent unassign if pilot or ship has an assigned mission
+		if selectedDetailPilot.AssignedMission != nil {
+			ShowWarningMenu("Cannot unassign: Pilot is on a mission.", &PilotDetailMenu)
+			return
+		}
+		if selectedDetailPilot.AssignedShip.AssignedMission != nil {
+			ShowWarningMenu("Cannot unassign: Ship is on a mission.", &PilotDetailMenu)
+			return
+		}
 		// Unlink both sides
 		ship := selectedDetailPilot.AssignedShip
 		selectedDetailPilot.AssignedShip = nil

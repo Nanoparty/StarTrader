@@ -44,7 +44,7 @@ func BuildShipDetailMenuOptions() []MenuItem {
 		if selectedDetailShip.AssignedPilot == nil {
 			options = append(options, MenuItem{Name: "Assign Pilot", Callback: ShowUnassignedPilotsMenu})
 		} else {
-			options = append(options, MenuItem{Name: "Unassign Pilot", Callback: UnassignPilotFromShipInShipDetail})
+			options = append(options, MenuItem{Name: "Unassign Pilot", Callback: UnassignPilotFromShipInShipDetail}) // Prevents unassign if ship or pilot has a mission
 		}
 	}
 	options = append(options, MenuItem{Name: "Back", Callback: ShipDetailBack})
@@ -53,6 +53,15 @@ func BuildShipDetailMenuOptions() []MenuItem {
 
 func UnassignPilotFromShipInShipDetail() {
 	if selectedDetailShip != nil && selectedDetailShip.AssignedPilot != nil {
+		// Prevent unassign if ship or pilot has an assigned mission
+		if selectedDetailShip.AssignedMission != nil {
+			ShowWarningMenu("Cannot unassign: Ship is on a mission.", &ShipDetailMenu)
+			return
+		}
+		if selectedDetailShip.AssignedPilot.AssignedMission != nil {
+			ShowWarningMenu("Cannot unassign: Pilot is on a mission.", &ShipDetailMenu)
+			return
+		}
 		pilot := selectedDetailShip.AssignedPilot
 		selectedDetailShip.AssignedPilot = nil
 		for i := range CompanyPilots {

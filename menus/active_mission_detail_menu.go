@@ -53,10 +53,8 @@ func BuildActiveMissionDetailMenuOptions() []MenuItem {
 
 func CancelActiveMission() {
 	if selectedActiveMission != nil && selectedActiveMissionShip != nil {
-		if selectedActiveMissionShip.AssignedPilot != nil {
-			selectedActiveMissionShip.AssignedPilot.AssignedMission = nil
-			selectedActiveMissionShip.AssignedPilot.Status = "Idle"
-		}
+		selectedActiveMissionShip.AssignedPilot.AssignedMission = nil
+		selectedActiveMissionShip.AssignedPilot.Status = "Idle"
 		selectedActiveMissionShip.AssignedMission = nil
 		selectedActiveMissionShip.Status = "Idle"
 		selectedActiveMission.Status = "Cancelled"
