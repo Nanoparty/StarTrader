@@ -60,11 +60,16 @@ func AssignMissionConfirmMenuIntro(m *Menu) {
 }
 
 func AssignMissionYes() {
-	if selectedAssignMissionShip != nil && selectedAssignMissionShip.AssignedPilot != nil && selectedStationMission != nil {
+	if selectedAssignMissionShip != nil && selectedStationMission != nil {
 		selectedAssignMissionShip.AssignedMission = selectedStationMission
 		selectedAssignMissionShip.Status = "In Progress"
-		selectedAssignMissionShip.AssignedPilot.AssignedMission = selectedStationMission
-		selectedAssignMissionShip.AssignedPilot.Status = "In Progress"
+		// Always update the pilot in CompanyPilots whose AssignedShip matches this ship
+		for i := range CompanyPilots {
+			if CompanyPilots[i].AssignedShip == selectedAssignMissionShip {
+				CompanyPilots[i].AssignedMission = selectedStationMission
+				CompanyPilots[i].Status = "In Progress"
+			}
+		}
 		selectedStationMission.Status = "In Progress"
 		// Remove mission from the current station's Missions
 		if selectedDetailStation != nil {

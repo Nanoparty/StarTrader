@@ -9,17 +9,16 @@ var ActiveMissionsOptions []MenuItem
 
 func BuildActiveMissionsMenuOptions() {
 	ActiveMissionsOptions = []MenuItem{}
-	for _, ship := range CompanyShips {
+	for i := range CompanyShips {
+		ship := &CompanyShips[i]
 		if ship.AssignedMission != nil && (ship.AssignedMission.Status == "In Progress" || ship.AssignedMission.Status == "Complete") {
 			mission := ship.AssignedMission
 			label := fmt.Sprintf("%-20s | %-18s | %2d min %2d sec | %-10s", mission.ShortName, ship.Name, mission.Minutes, mission.Seconds, mission.Status)
-			missionPtr := mission
-			shipPtr := ship
 			ActiveMissionsOptions = append(ActiveMissionsOptions, MenuItem{
 				Name: label,
 				Callback: func() {
-					selectedActiveMission = missionPtr
-					selectedActiveMissionShip = &shipPtr
+					selectedActiveMission = mission
+					selectedActiveMissionShip = ship
 					ActiveMissionDetailMenu.Options = BuildActiveMissionDetailMenuOptions()
 					CurrentMenu = &ActiveMissionDetailMenu
 				},

@@ -31,5 +31,10 @@ func init() {
 	WarningMenu = Menu{
 		Name:  "Warning",
 		Intro: WarningMenuIntro,
+		Back: func() {
+			if warningMenuPrevMenu != nil {
+				CurrentMenu = warningMenuPrevMenu
+			}
+		},
 	}
 }

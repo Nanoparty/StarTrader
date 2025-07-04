@@ -17,9 +17,9 @@ func CompanyPilotsIntro(m *Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
 }
 
-func PilotSelected(pilot Pilot) func() {
+func PilotSelected(pilot *Pilot) func() {
 	return func() {
-		selectedDetailPilot = &pilot
+		selectedDetailPilot = pilot
 		ShowPilotDetailMenu()
 	}
 }
@@ -40,7 +40,7 @@ func BuildCompanyPilotsMenuOptions() {
 		menuName := fmt.Sprintf("%-20s | %-14s | %-20s | %-12s", pilotPtr.Name, skills, shipName, pilotPtr.Status)
 		CompanyPilotOptions = append(CompanyPilotOptions, MenuItem{
 			Name:     menuName,
-			Callback: PilotSelected(*pilotPtr),
+			Callback: PilotSelected(pilotPtr),
 		})
 	}
 	CompanyPilotOptions = append(CompanyPilotOptions, MenuItem{Name: "Back", Callback: CompanyPilotsBack})
