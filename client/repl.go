@@ -5,6 +5,7 @@ import (
 	"os"
 	"startrader/globals"
 	"startrader/menus"
+	"time"
 
 	"golang.org/x/term"
 )
@@ -25,24 +26,57 @@ func StartRepl(cfg *globals.Config){
 
 		clearScreen()
 
-	for {
-		clearScreen()
+	refreshTicker := (*time.Ticker)(nil)
+refreshStop := make(chan struct{})
 
-		menus.CurrentMenu.Intro(menus.CurrentMenu)
-
-		for i, option := range menus.CurrentMenu.Options {
-			if i == menus.CurrentMenu.Selected {
-				// Invert colors for selected line
-				fmt.Printf("\r\033[7m> %s\033[0m\n", option.Name)
-			} else {
-				fmt.Printf("\r  %s\n\r", option.Name)
-			}
+for {
+	// If we're in the Active Missions menu, start a ticker to refresh every second
+	if menus.CurrentMenu == &menus.ActiveMissionsMenu {
+		if refreshTicker == nil {
+			refreshTicker = time.NewTicker(time.Second)
+			go func() {
+				for {
+					select {
+					case <-refreshTicker.C:
+						menus.BuildActiveMissionsMenuOptions()
+						clearScreen()
+						menus.CurrentMenu.Intro(menus.CurrentMenu)
+						for i, option := range menus.CurrentMenu.Options {
+							if i == menus.CurrentMenu.Selected {
+								fmt.Printf("\r\033[7m> %s\033[0m\n\r", option.Name)
+							} else {
+								fmt.Printf("\r  %s\n\r", option.Name)
+							}
+						}
+					case <-refreshStop:
+						refreshTicker.Stop()
+						refreshTicker = nil
+						return
+					}
+				}
+			}()
 		}
+		// Always refresh options before showing
+		menus.BuildActiveMissionsMenuOptions()
+	}
 
-		
+	clearScreen()
+	menus.CurrentMenu.Intro(menus.CurrentMenu)
+	for i, option := range menus.CurrentMenu.Options {
+		if i == menus.CurrentMenu.Selected {
+			fmt.Printf("\r\033[7m> %s\033[0m\n\r", option.Name)
+		} else {
+			fmt.Printf("\r  %s\n\r", option.Name)
+		}
+	}
 
-		var b = make([]byte, 3)
-		os.Stdin.Read(b)
+	var b = make([]byte, 3)
+	os.Stdin.Read(b)
+
+	// If we leave the Active Missions menu, stop the ticker
+	if refreshTicker != nil && menus.CurrentMenu != &menus.ActiveMissionsMenu {
+		refreshStop <- struct{}{}
+	}
 
 		if b[0] == 3 { // Ctrl+C
 			break
