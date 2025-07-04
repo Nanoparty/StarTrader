@@ -13,6 +13,11 @@ func CompanyShipsIntro(m *Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Println("\r" + globals.CompanyName + " Ships:")
 	fmt.Println("\r----------------------------------------------------------------------------")
+	if len(CompanyShips) == 0 {
+		fmt.Println("\rThere are currently no ships.\n\r")
+		return
+	}
+	
 	fmt.Printf("\r%-20s | %-10s | %-15s | %-10s\n", "Name", "Type", "Assigned Pilot", "Status")
 	fmt.Println("\r----------------------------------------------------------------------------")
 }

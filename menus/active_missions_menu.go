@@ -2,6 +2,7 @@ package menus
 
 import (
 	"fmt"
+	"startrader/globals"
 )
 
 var ActiveMissionsMenu Menu
@@ -31,8 +32,20 @@ func BuildActiveMissionsMenuOptions() {
 
 func ActiveMissionsMenuIntro(m *Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
-	fmt.Println("\rActive Missions:")
+	fmt.Println("\rActive Missions: " + globals.CompanyName)
 	fmt.Println("\r----------------------------------------------------------------------------")
+
+	activeCount := 0
+	for _, ship := range CompanyShips {
+		if ship.AssignedMission != nil && (ship.AssignedMission.Status == "In Progress" || ship.AssignedMission.Status == "Complete") {
+			activeCount++
+		}
+	}
+	if activeCount == 0 {
+		fmt.Println("\rThere are currently no active missions.\n\r")
+		return
+	}
+	
 	fmt.Printf("\r%-20s | %-18s | %-12s | %-10s\n", "Mission", "Ship", "Duration", "Status")
 	fmt.Println("\r----------------------------------------------------------------------------")
 }
