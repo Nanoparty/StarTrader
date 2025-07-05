@@ -13,8 +13,8 @@ var selectedAssignMissionShip *types.Ship
 // Step 1: Show ships eligible for assignment
 func BuildAssignMissionShipOptions() []types.MenuItem {
 	assignMissionShipOptions = []types.MenuItem{}
-	for i := range CompanyShips {
-		ship := &CompanyShips[i]
+	for i := range globals.Company.Ships {
+		ship := &globals.Company.Ships[i]
 		if ship.AssignedMission == nil && ship.AssignedPilot != nil {
 			shipCopy := ship // capture pointer
 			label := fmt.Sprintf("%s (Pilot: %s)", shipCopy.Name, shipCopy.AssignedPilot.Name)

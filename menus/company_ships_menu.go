@@ -6,7 +6,6 @@ import (
 	"startrader/types"
 )
 
-var CompanyShips []types.Ship
 var CompanyShipOptions []types.MenuItem
 var CompanyShipsMenu types.Menu
 
@@ -16,7 +15,7 @@ func CompanyShipsIntro(m *types.Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Printf("\r%s%*s%s\n\r", header, 76 - len(header) - len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")
-	if len(CompanyShips) == 0 {
+	if len(globals.Company.Ships) == 0 {
 		fmt.Println("\rThere are currently no ships.\n\r")
 		return
 	}
@@ -39,7 +38,7 @@ func CompanyShipsBack() {
 
 func BuildCompanyShipsMenuOptions() {
 	CompanyShipOptions = []types.MenuItem{}
-	for _, ship := range CompanyShips {
+	for _, ship := range globals.Company.Ships {
 		shipCopy := ship // avoid closure capture bug
 
 		assignedPilot := "None"

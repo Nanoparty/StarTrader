@@ -2,6 +2,7 @@ package menus
 
 import (
 	"time"
+	"startrader/globals"
 )
 
 // StartMissionTimers should be called once at game start
@@ -17,7 +18,7 @@ func StartMissionTimers() {
 }
 
 func updateActiveMissionTimers() {
-	for _, ship := range CompanyShips {
+	for _, ship := range globals.Company.Ships {
 		mission := ship.AssignedMission
 		if mission != nil && mission.Status == "In Progress" {
 			if mission.Minutes > 0 || mission.Seconds > 0 {

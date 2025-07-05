@@ -71,9 +71,9 @@ func UnassignPilotFromShip() {
 		// Unlink both sides
 		ship := selectedDetailPilot.AssignedShip
 		selectedDetailPilot.AssignedShip = nil
-		for i := range CompanyShips {
-			if &CompanyShips[i] == ship {
-				CompanyShips[i].AssignedPilot = nil
+		for i := range globals.Company.Ships {
+			if &globals.Company.Ships[i] == ship {
+				globals.Company.Ships[i].AssignedPilot = nil
 				break
 			}
 		}

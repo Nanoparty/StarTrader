@@ -80,7 +80,7 @@ func ShipPurchaseYes() {
 		}
 		// --- End Station Relationship Logic ---
 		shipCopy := *selectedShip
-		CompanyShips = append(CompanyShips, shipCopy)
+		globals.Company.Ships = append(globals.Company.Ships, shipCopy)
 		// Remove the purchased ship from ShipsForSale
 		for i, s := range selectedDetailStation.ShipsForSale {
 			if s.Name == shipCopy.Name && s.Price == shipCopy.Price {

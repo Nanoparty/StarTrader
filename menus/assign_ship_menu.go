@@ -18,21 +18,21 @@ func ShowUnassignedShipsMenu() {
 
 func BuildUnassignedShipsMenuOptions() {
 	unassignedShipsMenuOptions = []types.MenuItem{}
-	for i := range CompanyShips {
-		if CompanyShips[i].AssignedPilot == nil {
-			shipCopy := CompanyShips[i] // avoid closure capture bug
+	for i := range globals.Company.Ships {
+		if globals.Company.Ships[i].AssignedPilot == nil {
+			shipPtr := &globals.Company.Ships[i]
 			unassignedShipsMenuOptions = append(unassignedShipsMenuOptions, types.MenuItem{
-				Name:     shipCopy.Name,
-				Callback: AssignShipPrompt(shipCopy),
+				Name:     shipPtr.Name,
+				Callback: AssignShipPrompt(shipPtr),
 			})
 		}
 	}
 	unassignedShipsMenuOptions = append(unassignedShipsMenuOptions, types.MenuItem{Name: "Back", Callback: BackToPilotDetailMenu})
 }
 
-func AssignShipPrompt(ship types.Ship) func() {
+func AssignShipPrompt(ship *types.Ship) func() {
 	return func() {
-		selectedAssignShip = &ship
+		selectedAssignShip = ship
 		globals.CurrentMenu = &AssignShipConfirmMenu
 	}
 }
@@ -53,10 +53,10 @@ func AssignShipConfirmIntro(m *types.Menu) {
 func AssignShipYes() {
 	if selectedDetailPilot != nil && selectedAssignShip != nil {
 		// Update both objects to point to each other
-		for i := range CompanyShips {
-			if CompanyShips[i].Name == selectedAssignShip.Name {
-				CompanyShips[i].AssignedPilot = selectedDetailPilot
-				selectedAssignShip = &CompanyShips[i] // update pointer
+		for i := range globals.Company.Ships {
+			if globals.Company.Ships[i].Name == selectedAssignShip.Name {
+				globals.Company.Ships[i].AssignedPilot = selectedDetailPilot
+				selectedAssignShip = &globals.Company.Ships[i] // update pointer
 				break
 			}
 		}
