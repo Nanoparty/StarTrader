@@ -60,10 +60,10 @@ func AssignShipYes() {
 				break
 			}
 		}
-		for i := range CompanyPilots {
-			if CompanyPilots[i].Name == selectedDetailPilot.Name {
-				CompanyPilots[i].AssignedShip = selectedAssignShip
-				selectedDetailPilot = &CompanyPilots[i] // update pointer
+		for i := range globals.Company.Pilots {
+			if globals.Company.Pilots[i].Name == selectedDetailPilot.Name {
+				globals.Company.Pilots[i].AssignedShip = selectedAssignShip
+				selectedDetailPilot = &globals.Company.Pilots[i] // update pointer
 				break
 			}
 		}

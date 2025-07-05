@@ -95,7 +95,7 @@ func PilotPurchaseYes() {
 		}
 		// --- End Station Relationship Logic ---
 		pilotCopy := *selectedPilot
-		CompanyPilots = append(CompanyPilots, pilotCopy)
+		globals.Company.Pilots = append(globals.Company.Pilots, pilotCopy)
 		// Remove the purchased pilot from PilotsForSale
 		for i, p := range selectedDetailStation.PilotsForSale {
 			if p.Name == pilotCopy.Name && p.Price == pilotCopy.Price {

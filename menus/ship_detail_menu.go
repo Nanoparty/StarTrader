@@ -70,9 +70,9 @@ func UnassignPilotFromShipInShipDetail() {
 		}
 		pilot := selectedDetailShip.AssignedPilot
 		selectedDetailShip.AssignedPilot = nil
-		for i := range CompanyPilots {
-			if &CompanyPilots[i] == pilot {
-				CompanyPilots[i].AssignedShip = nil
+		for i := range globals.Company.Pilots {
+			if &globals.Company.Pilots[i] == pilot {
+				globals.Company.Pilots[i].AssignedShip = nil
 				break
 			}
 		}

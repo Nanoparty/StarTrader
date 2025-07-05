@@ -67,11 +67,11 @@ func AssignMissionYes() {
 	if selectedAssignMissionShip != nil && selectedStationMission != nil {
 		selectedAssignMissionShip.AssignedMission = selectedStationMission
 		selectedAssignMissionShip.Status = "In Progress"
-		// Always update the pilot in CompanyPilots whose AssignedShip matches this ship
-		for i := range CompanyPilots {
-			if CompanyPilots[i].AssignedShip == selectedAssignMissionShip {
-				CompanyPilots[i].AssignedMission = selectedStationMission
-				CompanyPilots[i].Status = "In Progress"
+		// Always update the pilot in globals.Company.Pilots whose AssignedShip matches this ship
+		for i := range globals.Company.Pilots {
+			if globals.Company.Pilots[i].AssignedShip == selectedAssignMissionShip {
+				globals.Company.Pilots[i].AssignedMission = selectedStationMission
+				globals.Company.Pilots[i].Status = "In Progress"
 			}
 		}
 		selectedStationMission.Status = "In Progress"
