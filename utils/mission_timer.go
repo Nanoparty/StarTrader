@@ -1,8 +1,8 @@
-package menus
+package utils
 
 import (
-	"time"
 	"startrader/globals"
+	"time"
 )
 
 // StartMissionTimers should be called once at game start

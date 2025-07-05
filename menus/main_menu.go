@@ -3,8 +3,9 @@ package menus
 import (
 	"fmt"
 	"os"
-	"startrader/types"
 	"startrader/globals"
+	"startrader/types"
+	"startrader/utils"
 )
 
 
@@ -23,7 +24,7 @@ func MainMenuIntro(m *types.Menu) {
 
 
 func NewGame() {
-	StartMissionTimers()
+	utils.StartMissionTimers()
 	globals.CurrentMenu = &CompanyMenu
 }
 
