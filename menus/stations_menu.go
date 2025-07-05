@@ -5,6 +5,9 @@ import "fmt"
 // Map of sector name to known stations
 var KnownStations = map[string][]string{
 	"Earth Sector": {"Lunar Station", "Terra Station"},
+}
+
+var UnknownStations = map[string][]string{
 	"Mars Sector": {"Mars Station", "Deimos Station", "Phobos Station"},
 	"Venus Sector": {"Venus Station"},
 	"Jupiter Sector": {"Jupitor Station", "Ganymede Station", "Europa Station", "Io Station"},

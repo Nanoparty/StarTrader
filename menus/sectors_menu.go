@@ -4,6 +4,9 @@ import "fmt"
 
 var KnownSectors = []string{
 	"Earth Sector",
+}
+
+var UnknownSectors = []string{
 	"Mars Sector",
 	"Venus Sector",
 	"Jupiter Sector",

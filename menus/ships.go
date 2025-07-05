@@ -46,9 +46,10 @@ func GenerateRandomPilot(level int) Pilot {
 	}
 	name := utils.Generate_Pilot_Name()
 	dominant := rand.Intn(3) // 0 = Transport, 1 = Combat, 2 = Mining
-	base := 2 + rand.Intn(3) + level // base 2-4, +level
-	domBonus := 4 + rand.Intn(3) + (level-1)*2 // dominant skill bonus: 4-6 + scaling
-	otherSpread := 2 + rand.Intn(3) + (level-1) // 2-4 + scaling
+	// Skill scaling: level 1 pilots max skill 5, higher levels scale up
+	base := 1 + rand.Intn(2) + (level-1) // 1-2 for level 1, +1 per level
+	domBonus := 1 + rand.Intn(2) + (level-1) // 1-2 for level 1, +1 per level
+	otherSpread := 1 + rand.Intn(2) + (level-1) // 1-2 for level 1, +1 per level
 
 	var transport, combat, mining int
 	switch dominant {
@@ -66,7 +67,13 @@ func GenerateRandomPilot(level int) Pilot {
 		combat = base + rand.Intn(otherSpread)
 	}
 	totalSkill := transport + combat + mining
-	price := 20000 + totalSkill*4000 + level*3000 + rand.Intn(5000) // price scales with skills and level
+	// Price scaling: level 1 pilots 2-5k, higher levels scale up
+	var price int
+	if level == 1 {
+		price = 2000 + rand.Intn(3001) // 2000-5000
+	} else {
+		price = 2000 + (level-1)*3000 + totalSkill*1000 + rand.Intn(2001)
+	}
 	return Pilot{
 		Name: name,
 		Price: price,
@@ -117,30 +124,45 @@ func GenerateRandomShip(level int) Ship {
 	var name string
 	var price, storage, speed, damage int
 	var maxHealth int
-	basePrice := 50000
-
+	// Ship stats
+	var avgStat float64
 	switch shipType {
 	case "Combat":
 		name = utils.Generate_Combat_Ship_Name()
-		storage = (10 + rand.Intn(6)) + (level-1)*2   // base 10-15, +2 per level above 1
-		speed = (10 + rand.Intn(6)) + (level-1)*2     // base 10-15, +2 per level
-		damage = (15 + rand.Intn(11)) + (level-1)*4   // base 15-25, +4 per level
-		maxHealth = (10 + rand.Intn(11)) + (level-1)*3 // base 10-20, +3 per level
-		price = basePrice + 50000 + damage*2000 + level*8000
+		storage = (10 + rand.Intn(6)) + (level-1)*2
+		speed = (10 + rand.Intn(6)) + (level-1)*2
+		damage = (15 + rand.Intn(11)) + (level-1)*4
+		maxHealth = (10 + rand.Intn(11)) + (level-1)*3
+		avgStat = float64(storage+speed+damage+maxHealth) / 4.0
 	case "Transport":
 		name = utils.Generate_Transport_Ship_Name()
-		storage = (20 + rand.Intn(11)) + (level-1)*3  // base 20-30, +3 per level
-		speed = (18 + rand.Intn(8)) + (level-1)*3     // base 18-25, +3 per level
-		damage = (5 + rand.Intn(6)) + (level-1)*2     // base 5-10, +2 per level
+		storage = (20 + rand.Intn(11)) + (level-1)*3
+		speed = (18 + rand.Intn(8)) + (level-1)*3
+		damage = (5 + rand.Intn(6)) + (level-1)*2
 		maxHealth = (10 + rand.Intn(11)) + (level-1)*3
-		price = basePrice + 30000 + speed*1500 + level*6000
+		avgStat = float64(storage+speed+damage+maxHealth) / 4.0
 	case "Mining":
 		name = utils.Generate_Mining_Ship_Name()
-		storage = (30 + rand.Intn(16)) + (level-1)*4  // base 30-45, +4 per level
-		speed = (8 + rand.Intn(5)) + (level-1)*2      // base 8-12, +2 per level
-		damage = (7 + rand.Intn(5)) + (level-1)*2     // base 7-11, +2 per level
+		storage = (30 + rand.Intn(16)) + (level-1)*4
+		speed = (8 + rand.Intn(5)) + (level-1)*2
+		damage = (7 + rand.Intn(5)) + (level-1)*2
 		maxHealth = (10 + rand.Intn(11)) + (level-1)*3
-		price = basePrice + 20000 + storage*1200 + level*5000
+		avgStat = float64(storage+speed+damage+maxHealth) / 4.0
+	}
+
+	// Price scaling: level 1 ships 5k-20k based on avgStat, higher levels scale up
+	if level == 1 {
+		minPrice := 5000.0
+		maxPrice := 20000.0
+		// Normalize avgStat for level 1 ships (roughly between 10 and 30)
+		statNorm := (avgStat - 10.0) / 20.0
+		if statNorm < 0.0 { statNorm = 0.0 }
+		if statNorm > 1.0 { statNorm = 1.0 }
+		price = int(minPrice + statNorm*(maxPrice-minPrice)) + rand.Intn(1001)
+	} else {
+		// For higher levels, scale price up with level and avgStat
+		base := 20000 + (level-1)*12000
+		price = base + int(avgStat*float64(level)*400) + rand.Intn(2001)
 	}
 
 	return Ship{

@@ -54,6 +54,6 @@ func init() {
 		Name:    "Company Menu",
 		Intro:   CompanyMenuIntro,
 		Options: CompanyMenuOptions,
-		Back:    QuitGame,
+		Back:    func() {},
 	}
 }
