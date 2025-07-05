@@ -3,12 +3,13 @@ package menus
 import (
 	"fmt"
 	"os"
-	"startrader/types"
 	"startrader/globals"
+	"startrader/types"
 )
 
 func QuitYes() {
 	fmt.Println("\rQuitting game...\n\r")
+	fmt.Println("\rThe Solar System will be waiting for your return...\n\r")
 	os.Exit(0)
 }
 
