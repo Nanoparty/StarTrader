@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-var CompanyMoney int = 10000
+var CompanyMoney int = 20000
 
 type Ship struct {
 	Name string

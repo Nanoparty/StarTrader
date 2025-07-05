@@ -67,6 +67,11 @@ func PilotPurchasePrompt(pilot Pilot, i int) func() {
 
 func PilotPurchaseYes() {
 	if selectedPilot != nil {
+		if CompanyMoney < selectedPilot.Price {
+			ShowWarningMenu("Insufficient funds to hire this pilot.", &PilotPurchaseMenu)
+			return
+		}
+		CompanyMoney -= selectedPilot.Price
 		pilotCopy := *selectedPilot
 		CompanyPilots = append(CompanyPilots, pilotCopy)
 		// Remove the purchased pilot from PilotsForSale

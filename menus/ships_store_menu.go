@@ -52,6 +52,11 @@ func ShipPurchasePrompt(ship Ship) func() {
 
 func ShipPurchaseYes() {
 	if selectedShip != nil {
+		if CompanyMoney < selectedShip.Price {
+			ShowWarningMenu("Insufficient funds to purchase this ship.", &ShipPurchaseMenu)
+			return
+		}
+		CompanyMoney -= selectedShip.Price
 		shipCopy := *selectedShip
 		CompanyShips = append(CompanyShips, shipCopy)
 		// Remove the purchased ship from ShipsForSale
