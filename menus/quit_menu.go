@@ -3,6 +3,8 @@ package menus
 import (
 	"fmt"
 	"os"
+	"startrader/types"
+	"startrader/globals"
 )
 
 func QuitYes() {
@@ -11,24 +13,24 @@ func QuitYes() {
 }
 
 func QuitNo() {
-	CurrentMenu = &CompanyMenu
+	globals.CurrentMenu = &CompanyMenu
 }
 
-func QuitMenuIntro(m *Menu) {
+func QuitMenuIntro(m *types.Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Println("\rAre you sure you want to quit the game?")
 	fmt.Println("\r----------------------------------------------------------------------------")
 }
 
-var QuitMenuOptions []MenuItem
-var QuitMenu Menu
+var QuitMenuOptions []types.MenuItem
+var QuitMenu types.Menu
 
 func init() {
-	QuitMenuOptions = []MenuItem{
+	QuitMenuOptions = []types.MenuItem{
 		{Name: "Yes", Callback: QuitYes},
 		{Name: "No", Callback: QuitNo},
 	}
-	QuitMenu = Menu{
+	QuitMenu = types.Menu{
 		Name:    "Quit Game?",
 		Intro:   QuitMenuIntro,
 		Options: QuitMenuOptions,

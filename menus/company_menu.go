@@ -3,17 +3,18 @@ package menus
 import (
 	"fmt"
 	"startrader/globals"
+	"startrader/types"
 )
 
 
 func Ships() {
 	BuildCompanyShipsMenuOptions()
-	CurrentMenu = &CompanyShipsMenu
+	globals.CurrentMenu = &CompanyShipsMenu
 }
 
 func Pilots() {
 	BuildCompanyPilotsMenuOptions()
-	CurrentMenu = &CompanyPilotsMenu
+	globals.CurrentMenu = &CompanyPilotsMenu
 }
 
 func Information() {
@@ -22,35 +23,35 @@ func Information() {
 
 
 func Locations() {
-	CurrentMenu = &SectorsMenu
+	globals.CurrentMenu = &SectorsMenu
 }
 
 func QuitGame() {
-	CurrentMenu = &QuitMenu
+	globals.CurrentMenu = &QuitMenu
 }
 
-func CompanyMenuIntro(m *Menu) {
-	header := "Company Menu: " + globals.CompanyName
-	moneyHeader := fmt.Sprintf("%s%d", "$", CompanyMoney)
+func CompanyMenuIntro(m *types.Menu) {
+	header := "Company Menu: " + globals.Company.Name
+	moneyHeader := fmt.Sprintf("%s%d", "$", globals.Company.Money)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Printf("\r%s%*s%s\n\r", header, 76 - len(header) - len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")
 }
 
-var CompanyMenuOptions []MenuItem
-var CompanyMenu Menu
+var CompanyMenuOptions []types.MenuItem
+var CompanyMenu types.Menu
 
 func init() {
-	CompanyMenuOptions = []MenuItem{
+	CompanyMenuOptions = []types.MenuItem{
 		{Name: "Ships", Callback: Ships},
 		{Name: "Pilots", Callback: Pilots},
-		{Name: "Active Missions", Callback: func() { BuildActiveMissionsMenuOptions(); CurrentMenu = &ActiveMissionsMenu }},
-		{Name: "Information", Callback: func() { CurrentMenu = &CompanyInformationMenu }},
+		{Name: "Active Missions", Callback: func() { BuildActiveMissionsMenuOptions(); globals.CurrentMenu = &ActiveMissionsMenu }},
+		{Name: "Information", Callback: func() { globals.CurrentMenu = &CompanyInformationMenu }},
 
 		{Name: "Locations", Callback: Locations},
 			{Name: "Quit Game", Callback: QuitGame},
 	}
-	CompanyMenu = Menu{
+	CompanyMenu = types.Menu{
 		Name:    "Company Menu",
 		Intro:   CompanyMenuIntro,
 		Options: CompanyMenuOptions,

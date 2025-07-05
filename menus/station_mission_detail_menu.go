@@ -2,17 +2,19 @@ package menus
 
 import (
 	"fmt"
+	"startrader/globals"
+	"startrader/types"
 )
 
-var selectedStationMission *Mission
-var StationMissionDetailMenu Menu
+var selectedStationMission *types.Mission
+var StationMissionDetailMenu types.Menu
 
-func StationMissionDetailMenuIntro(m *Menu) {
+func StationMissionDetailMenuIntro(m *types.Menu) {
 	if selectedStationMission == nil {
 		fmt.Println("\rNo mission selected.")
 		return
 	}
-	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
+	moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	header := "Mission Details:"
 	fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
@@ -30,16 +32,16 @@ func AcceptStationMission() {
 }
 
 func BackToStationMissionMenu() {
-	CurrentMenu = &StationMissionMenu
+	globals.CurrentMenu = &StationMissionMenu
 }
 
-var StationMissionDetailMenuOptions = []MenuItem{
+var StationMissionDetailMenuOptions = []types.MenuItem{
 	{Name: "Accept Mission", Callback: AcceptStationMission},
 	{Name: "Back", Callback: BackToStationMissionMenu},
 }
 
 func init() {
-	StationMissionDetailMenu = Menu{
+	StationMissionDetailMenu = types.Menu{
 		Name:    "Mission Detail",
 		Intro:   StationMissionDetailMenuIntro,
 		Options: StationMissionDetailMenuOptions,

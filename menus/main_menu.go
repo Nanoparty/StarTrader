@@ -3,11 +3,13 @@ package menus
 import (
 	"fmt"
 	"os"
+	"startrader/types"
+	"startrader/globals"
 )
 
 
 
-func MainMenuIntro(m *Menu) {
+func MainMenuIntro(m *types.Menu) {
 	fmt.Println("\r", "----------------------------------------------------------------------------")
 	fmt.Println("\r", "  _________ __                 ___________                  .___            ")
 	fmt.Println("\r", " /   _____//  |______ _______  \\__    ___/___________     __| _/___________ ")
@@ -22,7 +24,7 @@ func MainMenuIntro(m *Menu) {
 
 func NewGame() {
 	StartMissionTimers()
-	CurrentMenu = &CompanyMenu
+	globals.CurrentMenu = &CompanyMenu
 }
 
 func LoadGame() {
@@ -37,7 +39,7 @@ func Exit() {
 	os.Exit(0)
 }
 
-var MainMenuOptions = []MenuItem {
+var MainMenuOptions = []types.MenuItem {
 	{
 		Name: "New Game",
 		Callback: NewGame,
@@ -56,7 +58,7 @@ var MainMenuOptions = []MenuItem {
 	},
 }
 
-var MainMenu = Menu {
+var MainMenu = types.Menu {
 	Name:		"Main Menu",
 	Intro:		MainMenuIntro,
 	Options: 	MainMenuOptions,

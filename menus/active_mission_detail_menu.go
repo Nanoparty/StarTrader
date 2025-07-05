@@ -2,20 +2,22 @@ package menus
 
 import (
 	"fmt"
+	"startrader/globals"
+	"startrader/types"
 )
 
-var selectedActiveMission *Mission
-var selectedActiveMissionShip *Ship
-var ActiveMissionDetailMenu Menu
+var selectedActiveMission *types.Mission
+var selectedActiveMissionShip *types.Ship
+var ActiveMissionDetailMenu types.Menu
 
-func ActiveMissionDetailMenuIntro(m *Menu) {
+func ActiveMissionDetailMenuIntro(m *types.Menu) {
 	if selectedActiveMission == nil {
 		fmt.Println("\rNo mission selected.")
 		return
 	}
 	fmt.Println("\r----------------------------------------------------------------------------")
 		header := "Mission Details:"
-	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
+	moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
 	fmt.Printf("\r%s%*s%s\n\r", header, 76 - len(header) - len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Printf("\rName: %s\n", selectedActiveMission.ShortName)
@@ -33,23 +35,23 @@ func ActiveMissionDetailMenuIntro(m *Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
 }
 
-func BuildActiveMissionDetailMenuOptions() []MenuItem {
-	options := []MenuItem{}
+func BuildActiveMissionDetailMenuOptions() []types.MenuItem {
+	options := []types.MenuItem{}
 	if selectedActiveMission != nil {
 		if selectedActiveMission.Status == "Complete" {
-			options = append(options, MenuItem{
+			options = append(options, types.MenuItem{
 				Name:     "Complete Mission",
 				Callback: CompleteActiveMission,
 			})
 		}
 		if selectedActiveMission.Status == "In Progress" {
-			options = append(options, MenuItem{
+			options = append(options, types.MenuItem{
 				Name:     "Cancel Mission",
-				Callback: func() { CurrentMenu = &CancelMissionConfirmMenu },
+				Callback: func() { globals.CurrentMenu = &CancelMissionConfirmMenu },
 			})
 		}
 	}
-	options = append(options, MenuItem{Name: "Back", Callback: func() { BuildActiveMissionsMenuOptions(); CurrentMenu = &ActiveMissionsMenu }})
+	options = append(options, types.MenuItem{Name: "Back", Callback: func() { BuildActiveMissionsMenuOptions(); globals.CurrentMenu = &ActiveMissionsMenu }})
 	return options
 }
 
@@ -62,21 +64,21 @@ func CancelActiveMission() {
 		selectedActiveMission.Status = "Cancelled"
 	}
 	BuildActiveMissionsMenuOptions()
-	CurrentMenu = &ActiveMissionsMenu
+	globals.CurrentMenu = &ActiveMissionsMenu
 }
 
 func CompleteActiveMission() {
 	if selectedActiveMission != nil && selectedActiveMissionShip != nil && selectedActiveMission.Status == "Complete" {
 		// Only show the MissionCompleteMenu, do not update state yet
-		CurrentMenu = &MissionCompleteMenu
+		globals.CurrentMenu = &MissionCompleteMenu
 	}
 }
 
 func init() {
-	ActiveMissionDetailMenu = Menu{
+	ActiveMissionDetailMenu = types.Menu{
 		Name:    "Mission Detail",
 		Intro:   ActiveMissionDetailMenuIntro,
 		Options: nil, // Set dynamically
-		Back:    func() { BuildActiveMissionsMenuOptions(); CurrentMenu = &ActiveMissionsMenu },
+		Back:    func() { BuildActiveMissionsMenuOptions(); globals.CurrentMenu = &ActiveMissionsMenu },
 	}
 }

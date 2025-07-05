@@ -2,6 +2,8 @@ package menus
 
 import (
 	"fmt"
+	"startrader/globals"
+	"startrader/types"
 )
 
 // ShipsForSale is now per-station, see selectedDetailStation.ShipsForSale
@@ -12,24 +14,24 @@ func ShowStationShipsStoreMenu() {
 		return
 	}
 	BuildStationShipsStoreMenuOptions()
-	CurrentMenu = &ShipsStoreMenu
+	globals.CurrentMenu = &ShipsStoreMenu
 }
 
 func BuildStationShipsStoreMenuOptions() {
-	ShipsStoreMenuOptions = []MenuItem{}
+	ShipsStoreMenuOptions = []types.MenuItem{}
 	for _, ship := range selectedDetailStation.ShipsForSale {
 		shipCopy := ship // avoid closure capture bug
-		ShipsStoreMenuOptions = append(ShipsStoreMenuOptions, MenuItem{
+		ShipsStoreMenuOptions = append(ShipsStoreMenuOptions, types.MenuItem{
 			Name:     fmt.Sprintf("%-20s | %-10s | $%-9d", ship.Name, ship.Type, ship.Price),
 			Callback: ShipPurchasePrompt(shipCopy),
 		})
 	}
-	ShipsStoreMenuOptions = append(ShipsStoreMenuOptions, MenuItem{Name: "Back", Callback: ShipsStoreBack})
+	ShipsStoreMenuOptions = append(ShipsStoreMenuOptions, types.MenuItem{Name: "Back", Callback: ShipsStoreBack})
 	ShipsStoreMenu.Options = ShipsStoreMenuOptions
 }
 
-func ShipsStoreMenuIntro(m *Menu) {
-	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
+func ShipsStoreMenuIntro(m *types.Menu) {
+	moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	header := "Spaceships for Sale:"
 	fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
@@ -43,22 +45,22 @@ func ShipsStoreMenuIntro(m *Menu) {
 	}
 }
 
-var selectedShip *Ship
+var selectedShip *types.Ship
 
-func ShipPurchasePrompt(ship Ship) func() {
+func ShipPurchasePrompt(ship types.Ship) func() {
 	return func() {
 		selectedShip = &ship
-		CurrentMenu = &ShipPurchaseMenu
+		globals.CurrentMenu = &ShipPurchaseMenu
 	}
 }
 
 func ShipPurchaseYes() {
 	if selectedShip != nil {
-		if CompanyMoney < selectedShip.Price {
+		if globals.Company.Money < selectedShip.Price {
 			ShowWarningMenu("Insufficient funds to purchase this ship.", &ShipPurchaseMenu)
 			return
 		}
-		CompanyMoney -= selectedShip.Price
+		globals.Company.Money -= selectedShip.Price
 		// --- Station Relationship Logic ---
 		if selectedDetailStation != nil {
 			selectedDetailStation.MoneySpent += selectedShip.Price
@@ -89,30 +91,30 @@ func ShipPurchaseYes() {
 	}
 	selectedShip = nil
 	BuildShipsStoreMenuOptions()
-	CurrentMenu = &ShipsStoreMenu
+	globals.CurrentMenu = &ShipsStoreMenu
 }
 
 func BuildShipsStoreMenuOptions() {
-	ShipsStoreMenuOptions = []MenuItem{}
+	ShipsStoreMenuOptions = []types.MenuItem{}
 	for _, ship := range selectedDetailStation.ShipsForSale {
 		shipCopy := ship // avoid closure capture bug
-		ShipsStoreMenuOptions = append(ShipsStoreMenuOptions, MenuItem{
+		ShipsStoreMenuOptions = append(ShipsStoreMenuOptions, types.MenuItem{
 			Name:     fmt.Sprintf("%-20s | %-10s | $%-9d", ship.Name, ship.Type, ship.Price),
 			Callback: ShipPurchasePrompt(shipCopy),
 		})
 	}
-	ShipsStoreMenuOptions = append(ShipsStoreMenuOptions, MenuItem{Name: "Back", Callback: ShipsStoreBack})
+	ShipsStoreMenuOptions = append(ShipsStoreMenuOptions, types.MenuItem{Name: "Back", Callback: ShipsStoreBack})
 	ShipsStoreMenu.Options = ShipsStoreMenuOptions
 }
 
 func ShipPurchaseNo() {
 	selectedShip = nil
-	CurrentMenu = &ShipsStoreMenu
+	globals.CurrentMenu = &ShipsStoreMenu
 }
 
-func ShipPurchaseMenuIntro(m *Menu) {
+func ShipPurchaseMenuIntro(m *types.Menu) {
 	if selectedShip != nil {
-		moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
+		moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
 		fmt.Println("\r----------------------------------------------------------------------------")
 		header := "Ship Details:"
 		fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
@@ -131,28 +133,28 @@ func ShipPurchaseMenuIntro(m *Menu) {
 	}
 }
 
-func ShipPurchaseMenuOptions() []MenuItem {
-	return []MenuItem{
+func ShipPurchaseMenuOptions() []types.MenuItem {
+	return []types.MenuItem{
 		{Name: "Yes", Callback: ShipPurchaseYes},
 		{Name: "No", Callback: ShipPurchaseNo},
 	}
 }
 
-var ShipPurchaseMenu Menu
+var ShipPurchaseMenu types.Menu
 
-var ShipsStoreMenuOptions []MenuItem
-var ShipsStoreMenu Menu
+var ShipsStoreMenuOptions []types.MenuItem
+var ShipsStoreMenu types.Menu
 
 func init() {
-	ShipsStoreMenuOptions = []MenuItem{}
-	ShipsStoreMenu = Menu{
+	ShipsStoreMenuOptions = []types.MenuItem{}
+	ShipsStoreMenu = types.Menu{
 		Name:    "Ships Store Menu",
 		Intro:   ShipsStoreMenuIntro,
 		Options: ShipsStoreMenuOptions, // will be set dynamically
 		Back:    ShipsStoreBack,
 	}
 
-	ShipPurchaseMenu = Menu{
+	ShipPurchaseMenu = types.Menu{
 		Name:    "Purchase Ship?",
 		Intro:   ShipPurchaseMenuIntro,
 		Options: ShipPurchaseMenuOptions(),
@@ -161,7 +163,7 @@ func init() {
 }
 
 func ShipsStoreBack() {
-	CurrentMenu = &StationDetailMenu
+	globals.CurrentMenu = &StationDetailMenu
 }
 	// End of file. All menu initialization is handled in the init() above.
 

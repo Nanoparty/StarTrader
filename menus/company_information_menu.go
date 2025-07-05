@@ -3,18 +3,19 @@ package menus
 import (
 	"fmt"
 	"startrader/globals"
+	"startrader/types"
 )
 
 var CompanyMissionsCompleted int = 0
 
-var CompanyInformationMenu Menu
+var CompanyInformationMenu types.Menu
 
-func CompanyInformationIntro(m *Menu) {
+func CompanyInformationIntro(m *types.Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Println("\rCompany Information:")
 	fmt.Println("\r----------------------------------------------------------------------------")
-	fmt.Printf("\rCompany Name: %s\n", globals.CompanyName)
-	fmt.Printf("\rTotal Money: $%d\n", CompanyMoney)
+	fmt.Printf("\rCompany Name: %s\n", globals.Company.Name)
+	fmt.Printf("\rTotal Money: $%d\n", globals.Company.Money)
 	fmt.Printf("\rTotal Missions Completed: %d\n", CompanyMissionsCompleted)
 	fmt.Printf("\rNumber of Ships Owned: %d\n", len(CompanyShips))
 	fmt.Printf("\rNumber of Pilots Owned: %d\n", len(CompanyPilots))
@@ -22,14 +23,14 @@ func CompanyInformationIntro(m *Menu) {
 }
 
 func CompanyInformationBack() {
-	CurrentMenu = &CompanyMenu
+	globals.CurrentMenu = &CompanyMenu
 }
 
 func init() {
-	CompanyInformationMenu = Menu{
+	CompanyInformationMenu = types.Menu{
 		Name:    "Company Information",
 		Intro:   CompanyInformationIntro,
-		Options: []MenuItem{{Name: "Back", Callback: CompanyInformationBack}},
+		Options: []types.MenuItem{{Name: "Back", Callback: CompanyInformationBack}},
 		Back:    CompanyInformationBack,
 	}
 }

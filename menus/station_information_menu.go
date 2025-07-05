@@ -1,13 +1,17 @@
 package menus
 
-import "fmt"
+import (
+	"fmt"
+	"startrader/globals"
+	"startrader/types"
+)
 
-func StationInformationMenuIntro(m *Menu) {
+func StationInformationMenuIntro(m *types.Menu) {
 	if selectedDetailStation == nil {
 		fmt.Println("\rNo station selected.")
 		return
 	}
-	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
+	moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	header := "Station Details:"
 	fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
@@ -21,17 +25,17 @@ func StationInformationMenuIntro(m *Menu) {
 }
 
 func StationInformationBack() {
-	CurrentMenu = &StationDetailMenu
+	globals.CurrentMenu = &StationDetailMenu
 }
 
-var StationInformationMenuOptions = []MenuItem{
+var StationInformationMenuOptions = []types.MenuItem{
 	{Name: "Back", Callback: StationInformationBack},
 }
 
-var StationInformationMenu Menu
+var StationInformationMenu types.Menu
 
 func init() {
-	StationInformationMenu = Menu{
+	StationInformationMenu = types.Menu{
 		Name:    "Station Information",
 		Intro:   StationInformationMenuIntro,
 		Options: StationInformationMenuOptions,

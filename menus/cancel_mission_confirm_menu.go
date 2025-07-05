@@ -2,11 +2,13 @@ package menus
 
 import (
 	"fmt"
+	"startrader/types"
+	"startrader/globals"
 )
 
-var CancelMissionConfirmMenu Menu
+var CancelMissionConfirmMenu types.Menu
 
-func CancelMissionConfirmMenuIntro(m *Menu) {
+func CancelMissionConfirmMenuIntro(m *types.Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Println("\rAre you sure you want to cancel this mission?")
 	fmt.Println("\r----------------------------------------------------------------------------")
@@ -23,18 +25,18 @@ func CancelMissionConfirmYes() {
 
 func CancelMissionConfirmNo() {
 	ActiveMissionDetailMenu.Options = BuildActiveMissionDetailMenuOptions()
-	CurrentMenu = &ActiveMissionDetailMenu
+	globals.CurrentMenu = &ActiveMissionDetailMenu
 }
 
-func CancelMissionConfirmMenuOptions() []MenuItem {
-	return []MenuItem{
+func CancelMissionConfirmMenuOptions() []types.MenuItem {
+	return []types.MenuItem{
 		{Name: "Yes", Callback: CancelMissionConfirmYes},
 		{Name: "No", Callback: CancelMissionConfirmNo},
 	}
 }
 
 func init() {
-	CancelMissionConfirmMenu = Menu{
+	CancelMissionConfirmMenu = types.Menu{
 		Name:    "Cancel Mission?",
 		Intro:   CancelMissionConfirmMenuIntro,
 		Options: CancelMissionConfirmMenuOptions(),

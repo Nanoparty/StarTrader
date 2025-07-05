@@ -1,44 +1,48 @@
 package menus
 
-import "fmt"
+import (
+	"fmt"
+	"startrader/types"
+	"startrader/globals"
+)
 
-var unassignedPilotsMenuOptions []MenuItem
-var UnassignedPilotsMenu Menu
-var selectedAssignPilot *Pilot
+var unassignedPilotsMenuOptions []types.MenuItem
+var UnassignedPilotsMenu types.Menu
+var selectedAssignPilot *types.Pilot
 
 func ShowUnassignedPilotsMenu() {
 	BuildUnassignedPilotsMenuOptions()
 	UnassignedPilotsMenu.Options = unassignedPilotsMenuOptions
-	CurrentMenu = &UnassignedPilotsMenu
+	globals.CurrentMenu = &UnassignedPilotsMenu
 }
 
 func BuildUnassignedPilotsMenuOptions() {
-	unassignedPilotsMenuOptions = []MenuItem{}
+	unassignedPilotsMenuOptions = []types.MenuItem{}
 	for i := range CompanyPilots {
 		if CompanyPilots[i].AssignedShip == nil {
 			pilotCopy := CompanyPilots[i] // avoid closure capture bug
-			unassignedPilotsMenuOptions = append(unassignedPilotsMenuOptions, MenuItem{
+			unassignedPilotsMenuOptions = append(unassignedPilotsMenuOptions, types.MenuItem{
 				Name:     pilotCopy.Name,
 				Callback: AssignPilotPrompt(pilotCopy),
 			})
 		}
 	}
-	unassignedPilotsMenuOptions = append(unassignedPilotsMenuOptions, MenuItem{Name: "Back", Callback: BackToShipDetailMenu})
+	unassignedPilotsMenuOptions = append(unassignedPilotsMenuOptions, types.MenuItem{Name: "Back", Callback: BackToShipDetailMenu})
 }
 
-func AssignPilotPrompt(pilot Pilot) func() {
+func AssignPilotPrompt(pilot types.Pilot) func() {
 	return func() {
 		selectedAssignPilot = &pilot
-		CurrentMenu = &AssignPilotConfirmMenu
+		globals.CurrentMenu = &AssignPilotConfirmMenu
 	}
 }
 
 func BackToShipDetailMenu() {
 	ShipDetailMenu.Options = BuildShipDetailMenuOptions()
-	CurrentMenu = &ShipDetailMenu
+	globals.CurrentMenu = &ShipDetailMenu
 }
 
-func AssignPilotConfirmIntro(m *Menu) {
+func AssignPilotConfirmIntro(m *types.Menu) {
 	if selectedDetailShip != nil && selectedAssignPilot != nil {
 		fmt.Printf("\rAssign %s to %s?\n", selectedAssignPilot.Name, selectedDetailShip.Name)
 	} else {
@@ -65,31 +69,31 @@ func AssignPilotYes() {
 		}
 	}
 	ShipDetailMenu.Options = BuildShipDetailMenuOptions()
-	CurrentMenu = &ShipDetailMenu
+	globals.CurrentMenu = &ShipDetailMenu
 }
 
 func AssignPilotNo() {
 	ShowUnassignedPilotsMenu()
 }
 
-func AssignPilotConfirmMenuOptions() []MenuItem {
-	return []MenuItem{
+func AssignPilotConfirmMenuOptions() []types.MenuItem {
+	return []types.MenuItem{
 		{Name: "Yes", Callback: AssignPilotYes},
 		{Name: "No", Callback: AssignPilotNo},
 	}
 }
 
-var AssignPilotConfirmMenu Menu
+var AssignPilotConfirmMenu types.Menu
 
 func init() {
-	UnassignedPilotsMenu = Menu{
+	UnassignedPilotsMenu = types.Menu{
 		Name:    "Unassigned Pilots",
-		Intro:   func(m *Menu) { fmt.Println("\rSelect a pilot to assign:") },
+		Intro:   func(m *types.Menu) { fmt.Println("\rSelect a pilot to assign:") },
 		Options: nil, // set dynamically
 		Back:    BackToShipDetailMenu,
 	}
 
-	AssignPilotConfirmMenu = Menu{
+	AssignPilotConfirmMenu = types.Menu{
 		Name:    "Assign Pilot?",
 		Intro:   AssignPilotConfirmIntro,
 		Options: AssignPilotConfirmMenuOptions(),

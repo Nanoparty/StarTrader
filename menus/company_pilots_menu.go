@@ -3,15 +3,16 @@ package menus
 import (
 	"fmt"
 	"startrader/globals"
+	"startrader/types"
 )
 
-var CompanyPilots []Pilot
-var CompanyPilotOptions []MenuItem
-var CompanyPilotsMenu Menu
+var CompanyPilots []types.Pilot
+var CompanyPilotOptions []types.MenuItem
+var CompanyPilotsMenu types.Menu
 
-func CompanyPilotsIntro(m *Menu) {
-	header := globals.CompanyName + " Pilots:"
-	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
+func CompanyPilotsIntro(m *types.Menu) {
+	header := globals.Company.Name + " Pilots:"
+	moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Printf("\r%s%*s%s\n\r", header, 76 - len(header) - len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")
@@ -23,7 +24,7 @@ func CompanyPilotsIntro(m *Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
 }
 
-func PilotSelected(pilot *Pilot) func() {
+func PilotSelected(pilot *types.Pilot) func() {
 	return func() {
 		selectedDetailPilot = pilot
 		ShowPilotDetailMenu()
@@ -31,11 +32,11 @@ func PilotSelected(pilot *Pilot) func() {
 }
 
 func CompanyPilotsBack() {
-	CurrentMenu = &CompanyMenu
+	globals.CurrentMenu = &CompanyMenu
 }
 
 func BuildCompanyPilotsMenuOptions() {
-	CompanyPilotOptions = []MenuItem{}
+	CompanyPilotOptions = []types.MenuItem{}
 	for i := range CompanyPilots {
 		pilotPtr := &CompanyPilots[i]
 		shipName := "None"
@@ -44,17 +45,17 @@ func BuildCompanyPilotsMenuOptions() {
 		}
 		skills := fmt.Sprintf("%d/%d/%d", pilotPtr.TransportSkill, pilotPtr.CombatSkill, pilotPtr.MiningSkill)
 		menuName := fmt.Sprintf("%-20s | %-14s | %-20s | %-12s", pilotPtr.Name, skills, shipName, pilotPtr.Status)
-		CompanyPilotOptions = append(CompanyPilotOptions, MenuItem{
+		CompanyPilotOptions = append(CompanyPilotOptions, types.MenuItem{
 			Name:     menuName,
 			Callback: PilotSelected(pilotPtr),
 		})
 	}
-	CompanyPilotOptions = append(CompanyPilotOptions, MenuItem{Name: "Back", Callback: CompanyPilotsBack})
+	CompanyPilotOptions = append(CompanyPilotOptions, types.MenuItem{Name: "Back", Callback: CompanyPilotsBack})
 	CompanyPilotsMenu.Options = CompanyPilotOptions
 }
 
 func init() {
-	CompanyPilotsMenu = Menu{
+	CompanyPilotsMenu = types.Menu{
 		Name:    "Company Pilots",
 		Intro:   CompanyPilotsIntro,
 		Options: nil, // Will be set by BuildCompanyPilotsMenuOptions

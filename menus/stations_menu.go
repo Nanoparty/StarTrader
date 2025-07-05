@@ -1,68 +1,54 @@
 package menus
 
-import "fmt"
+import (
+	"fmt"
+	"startrader/globals"
+	"startrader/types"
+)
 
-// Map of sector name to known stations
-var KnownStations = map[string][]string{
-	"Earth Sector": {"Lunar Station", "Terra Station"},
-}
+var SelectedSector *types.Sector
 
-var UnknownStations = map[string][]string{
-	"Mars Sector": {"Mars Station", "Deimos Station", "Phobos Station"},
-	"Venus Sector": {"Venus Station"},
-	"Jupiter Sector": {"Jupitor Station", "Ganymede Station", "Europa Station", "Io Station"},
-	"Central Belt": {"Ceres Station", "Pallas Station", "Vesta Station", "Hygiea Station"},
-	"Keiper Belt": {"Pluto Outpost", "Voyager Station"},
-}
-
-var SelectedSector string
-
-func StationsMenuIntro(m *Menu) {
-	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
+func StationsMenuIntro(m *types.Menu) {
+	moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
 	fmt.Println("\r----------------------------------------------------------------------------")
-	header := fmt.Sprintf("Stations in %s:", SelectedSector)
+	header := fmt.Sprintf("types.Stations in %s:", SelectedSector.Name)
 	fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")
 }
 
-func StationSelected(station *Station) func() {
+func StationSelected(station *types.Station) func() {
 	return func() {
 		selectedDetailStation = station
-		CurrentMenu = &StationDetailMenu
+		globals.CurrentMenu = &StationDetailMenu
 	}
 }
 
-var StationsMenuOptions []MenuItem
-var StationsMenu Menu
-var StationsByName = make(map[string]*Station)
+var StationsMenuOptions []types.MenuItem
+var StationsMenu types.Menu
+var StationsByName = make(map[string]*types.Station)
 
-func ShowStationsMenu(sector string) {
+func ShowStationsMenu(sector *types.Sector) {
 	SelectedSector = sector
-	StationsMenuOptions = []MenuItem{}
-	for _, stationName := range KnownStations[sector] {
-		var stationPtr *Station
-		if existing, ok := StationsByName[stationName]; ok {
-			stationPtr = existing
-		} else {
-			station := NewStation(stationName)
-			StationsByName[stationName] = station
-			stationPtr = station
+	StationsMenuOptions = []types.MenuItem{}
+	for i := range sector.Stations {
+		station := &sector.Stations[i]
+		if station.IsKnown {
+			StationsMenuOptions = append(StationsMenuOptions, types.MenuItem{
+				Name:     station.Name,
+				Callback: StationSelected(station),
+			})
 		}
-		StationsMenuOptions = append(StationsMenuOptions, MenuItem{
-			Name:     stationName,
-			Callback: StationSelected(stationPtr),
-		})
 	}
-	StationsMenuOptions = append(StationsMenuOptions, MenuItem{Name: "Back", Callback: StationsMenuBack})
-	StationsMenu = Menu{
-		Name:    "Stations Menu",
+	StationsMenuOptions = append(StationsMenuOptions, types.MenuItem{Name: "Back", Callback: StationsMenuBack})
+	StationsMenu = types.Menu{
+		Name:    "types.Stations Menu",
 		Intro:   StationsMenuIntro,
 		Options: StationsMenuOptions,
 		Back:    StationsMenuBack,
 	}
-	CurrentMenu = &StationsMenu
+	globals.CurrentMenu = &StationsMenu
 }
 
 func StationsMenuBack() {
-	CurrentMenu = &SectorsMenu
+	globals.CurrentMenu = &SectorsMenu
 }

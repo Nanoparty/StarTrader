@@ -1,24 +1,12 @@
-package menus
+package utils
 
 import (
 	"math/rand"
+	"startrader/types"
 	"time"
 )
 
-// Ship.AssignedMission and Pilot.AssignedMission may point to this struct or be nil if not assigned
-//
-type Mission struct {
-	ShortName   string
-	Description string
-	Type        string // "Mining", "Transport", or "Combat"
-	Level       int    // 1-10, affects payout
-	Payout      int    // Money earned for completion
-	Minutes     int    // Duration minutes (0-4)
-	Seconds     int    // Duration seconds (0-59)
-	Status      string // "Idle", "In Progress", or "Complete"
-}
-
-func GenerateMiningMission(level int) Mission {
+func GenerateMiningMission(level int) types.Mission {
 	if level < 1 {
 		level = 1
 	} else if level > 10 {
@@ -53,7 +41,7 @@ func GenerateMiningMission(level int) Mission {
 	seconds := durationSec % 60
 	payout := (minutes*60 + seconds) * 20 * level // payout scaled to seconds and level
 	selected := miningMissions[idx]
-	return Mission{
+	return types.Mission{
 		ShortName:   selected.Name,
 		Description: selected.Desc,
 		Type:        "Mining",
@@ -65,7 +53,7 @@ func GenerateMiningMission(level int) Mission {
 	}
 }
 
-func GenerateCombatMission(level int) Mission {
+func GenerateCombatMission(level int) types.Mission {
 	if level < 1 {
 		level = 1
 	} else if level > 10 {
@@ -100,7 +88,7 @@ func GenerateCombatMission(level int) Mission {
 	seconds := durationSec % 60
 	payout := (minutes*60 + seconds) * 20 * level // payout scaled to seconds and level
 	selected := combatMissions[idx]
-	return Mission{
+	return types.Mission{
 		ShortName:   selected.Name,
 		Description: selected.Desc,
 		Type:        "Combat",
@@ -112,7 +100,7 @@ func GenerateCombatMission(level int) Mission {
 	}
 }
 
-func GenerateRandomMission(level int) Mission {
+func GenerateRandomMission(level int) types.Mission {
 	if level < 1 {
 		level = 1
 	} else if level > 10 {
@@ -129,7 +117,7 @@ func GenerateRandomMission(level int) Mission {
 	}
 }
 
-func GenerateTransportMission(level int) Mission {
+func GenerateTransportMission(level int) types.Mission {
 	if level < 1 {
 		level = 1
 	} else if level > 10 {
@@ -140,20 +128,20 @@ func GenerateTransportMission(level int) Mission {
 		{"VIP Transport", "Escort a VIP passenger to another station safely."},
 		{"Cargo Delivery", "Transport valuable cargo across the sector."},
 		{"Diplomatic Pouch", "Deliver confidential diplomatic documents."},
-		{"Food Shipment", "Deliver perishable food goods to a colony in need."},
+		{"Food types.Shipment", "Deliver perishable food goods to a colony in need."},
 		{"Rescue Pickup", "Pick up stranded miners and bring them to safety."},
 		{"Mail Run", "Deliver important mail to several stations."},
 		{"Science Equipment", "Transport sensitive science equipment for research."},
 		{"Prisoner Transfer", "Safely transfer prisoners between stations."},
 		{"Tourist Group", "Take a group of tourists on a scenic tour."},
-		{"Weapon Shipment", "Deliver a shipment of weapons to a security post."},
+		{"Weapon types.Shipment", "Deliver a shipment of weapons to a security post."},
 		{"Rare Artifact", "Transport a rare artifact for a museum exhibit."},
 		{"Fuel Run", "Deliver fuel to a stranded ship in deep space."},
 		{"Medical Evacuation", "Evacuate injured personnel to a hospital station."},
 		{"Mining Tools", "Deliver mining tools to a remote asteroid base."},
 		{"VIP Entertainer", "Transport a famous entertainer to a show venue."},
 		{"Data Courier", "Carry encrypted data to a secure facility."},
-		{"Livestock Shipment", "Transport live animals for agricultural purposes."},
+		{"Livestock types.Shipment", "Transport live animals for agricultural purposes."},
 		{"Construction Materials", "Deliver building materials to a new colony."},
 		{"Emergency Parts", "Rush critical ship parts to a repair crew."},
 	}
@@ -164,7 +152,7 @@ func GenerateTransportMission(level int) Mission {
 	seconds := durationSec % 60
 	payout := (minutes*60 + seconds) * 20 * level // payout scaled to total seconds and level
 	selected := transportMissions[idx]
-	return Mission{
+	return types.Mission{
 		ShortName:   selected.Name,
 		Description: selected.Desc,
 		Type:        "Transport",
@@ -177,8 +165,8 @@ func GenerateTransportMission(level int) Mission {
 }
 
 // GenerateRandomMissionList returns a slice of n random missions at the given level.
-func GenerateRandomMissionList(n int, level int) []Mission {
-	missions := make([]Mission, 0, n)
+func GenerateRandomMissionList(n int, level int) []types.Mission {
+	missions := make([]types.Mission, 0, n)
 	for i := 0; i < n; i++ {
 		missions = append(missions, GenerateRandomMission(level))
 	}

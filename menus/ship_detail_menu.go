@@ -1,17 +1,21 @@
 package menus
 
-import "fmt"
+import (
+	"fmt"
+	"startrader/globals"
+	"startrader/types"
+)
 
-var selectedDetailShip *Ship
+var selectedDetailShip *types.Ship
 
-func ShipDetailMenuIntro(m *Menu) {
+func ShipDetailMenuIntro(m *types.Menu) {
 	if selectedDetailShip == nil {
 		fmt.Println("\rNo ship selected.")
 		return
 	}
 	fmt.Println("\r----------------------------------------------------------------------------")
 		header := "Ship Details:"
-	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
+	moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
 	fmt.Printf("\r%s%*s%s\n\r", header, 76 - len(header) - len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Printf("\rShip: %s\n", selectedDetailShip.Name)
@@ -37,19 +41,19 @@ func ShipDetailMenuIntro(m *Menu) {
 
 func ShipDetailBack() {
 	BuildCompanyShipsMenuOptions()
-	CurrentMenu = &CompanyShipsMenu
+	globals.CurrentMenu = &CompanyShipsMenu
 }
 
-func BuildShipDetailMenuOptions() []MenuItem {
-	options := []MenuItem{}
+func BuildShipDetailMenuOptions() []types.MenuItem {
+	options := []types.MenuItem{}
 	if selectedDetailShip != nil {
 		if selectedDetailShip.AssignedPilot == nil {
-			options = append(options, MenuItem{Name: "Assign Pilot", Callback: ShowUnassignedPilotsMenu})
+			options = append(options, types.MenuItem{Name: "Assign Pilot", Callback: ShowUnassignedPilotsMenu})
 		} else {
-			options = append(options, MenuItem{Name: "Unassign Pilot", Callback: UnassignPilotFromShipInShipDetail}) // Prevents unassign if ship or pilot has a mission
+			options = append(options, types.MenuItem{Name: "Unassign Pilot", Callback: UnassignPilotFromShipInShipDetail}) // Prevents unassign if ship or pilot has a mission
 		}
 	}
-	options = append(options, MenuItem{Name: "Back", Callback: ShipDetailBack})
+	options = append(options, types.MenuItem{Name: "Back", Callback: ShipDetailBack})
 	return options
 }
 
@@ -76,15 +80,15 @@ func UnassignPilotFromShipInShipDetail() {
 	ShowShipDetailMenu()
 }
 
-var ShipDetailMenu Menu
+var ShipDetailMenu types.Menu
 
 func ShowShipDetailMenu() {
 	ShipDetailMenu.Options = BuildShipDetailMenuOptions()
-	CurrentMenu = &ShipDetailMenu
+	globals.CurrentMenu = &ShipDetailMenu
 }
 
 func init() {
-	ShipDetailMenu = Menu{
+	ShipDetailMenu = types.Menu{
 		Name:    "Ship Detail",
 		Intro:   ShipDetailMenuIntro,
 		Options: nil, // Set dynamically

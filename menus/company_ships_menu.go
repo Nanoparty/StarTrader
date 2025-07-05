@@ -3,15 +3,16 @@ package menus
 import (
 	"fmt"
 	"startrader/globals"
+	"startrader/types"
 )
 
-var CompanyShips []Ship
-var CompanyShipOptions []MenuItem
-var CompanyShipsMenu Menu
+var CompanyShips []types.Ship
+var CompanyShipOptions []types.MenuItem
+var CompanyShipsMenu types.Menu
 
-func CompanyShipsIntro(m *Menu) {
-	header := globals.CompanyName + " Ships:"
-	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
+func CompanyShipsIntro(m *types.Menu) {
+	header := globals.Company.Name + " Ships:"
+	moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Printf("\r%s%*s%s\n\r", header, 76 - len(header) - len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")
@@ -24,7 +25,7 @@ func CompanyShipsIntro(m *Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
 }
 
-func ShipSelected(ship Ship) func() {
+func ShipSelected(ship types.Ship) func() {
 	return func() {
 		selectedDetailShip = &ship
 		ShowShipDetailMenu()
@@ -33,11 +34,11 @@ func ShipSelected(ship Ship) func() {
 
 
 func CompanyShipsBack() {
-	CurrentMenu = &CompanyMenu
+	globals.CurrentMenu = &CompanyMenu
 }
 
 func BuildCompanyShipsMenuOptions() {
-	CompanyShipOptions = []MenuItem{}
+	CompanyShipOptions = []types.MenuItem{}
 	for _, ship := range CompanyShips {
 		shipCopy := ship // avoid closure capture bug
 
@@ -47,17 +48,17 @@ func BuildCompanyShipsMenuOptions() {
 		}
 		status := shipCopy.Status
 		menuName := fmt.Sprintf("%-20s | %-10s | %-15s | %-10s", shipCopy.Name, shipCopy.Type, assignedPilot, status)
-		CompanyShipOptions = append(CompanyShipOptions, MenuItem{
+		CompanyShipOptions = append(CompanyShipOptions, types.MenuItem{
 			Name:     menuName,
 			Callback: ShipSelected(shipCopy),
 		})
 	}
-	CompanyShipOptions = append(CompanyShipOptions, MenuItem{Name: "Back\n\r", Callback: CompanyShipsBack})
+	CompanyShipOptions = append(CompanyShipOptions, types.MenuItem{Name: "Back\n\r", Callback: CompanyShipsBack})
 	CompanyShipsMenu.Options = CompanyShipOptions
 }
 
 func init() {
-	CompanyShipsMenu = Menu{
+	CompanyShipsMenu = types.Menu{
 		Name:    "Company Ships",
 		Intro:   CompanyShipsIntro,
 		Options: nil, // Will be set by BuildCompanyShipsMenuOptions

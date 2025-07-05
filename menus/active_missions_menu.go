@@ -3,36 +3,37 @@ package menus
 import (
 	"fmt"
 	"startrader/globals"
+	"startrader/types"
 )
 
-var ActiveMissionsMenu Menu
-var ActiveMissionsOptions []MenuItem
+var ActiveMissionsMenu types.Menu
+var ActiveMissionsOptions []types.MenuItem
 
 func BuildActiveMissionsMenuOptions() {
-	ActiveMissionsOptions = []MenuItem{}
+	ActiveMissionsOptions = []types.MenuItem{}
 	for i := range CompanyShips {
 		ship := &CompanyShips[i]
 		if ship.AssignedMission != nil && (ship.AssignedMission.Status == "In Progress" || ship.AssignedMission.Status == "Complete") {
 			mission := ship.AssignedMission
 			label := fmt.Sprintf("%-20s | %-18s | %2d min %2d sec | %-10s", mission.ShortName, ship.Name, mission.Minutes, mission.Seconds, mission.Status)
-			ActiveMissionsOptions = append(ActiveMissionsOptions, MenuItem{
+			ActiveMissionsOptions = append(ActiveMissionsOptions, types.MenuItem{
 				Name: label,
 				Callback: func() {
 					selectedActiveMission = mission
 					selectedActiveMissionShip = ship
 					ActiveMissionDetailMenu.Options = BuildActiveMissionDetailMenuOptions()
-					CurrentMenu = &ActiveMissionDetailMenu
+					globals.CurrentMenu = &ActiveMissionDetailMenu
 				},
 			})
 		}
 	}
-	ActiveMissionsOptions = append(ActiveMissionsOptions, MenuItem{Name: "Back", Callback: func() { CurrentMenu = &CompanyMenu }})
+	ActiveMissionsOptions = append(ActiveMissionsOptions, types.MenuItem{Name: "Back", Callback: func() { BuildActiveMissionsMenuOptions(); globals.CurrentMenu = &CompanyMenu }})
 	ActiveMissionsMenu.Options = ActiveMissionsOptions
 }
 
-func ActiveMissionsMenuIntro(m *Menu) {
-	header := "Active Missions: " + globals.CompanyName
-	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
+func ActiveMissionsMenuIntro(m *types.Menu) {
+	header := "Active Missions: " + globals.Company.Name
+	moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Printf("\r%s%*s%s\n\r", header, 76 - len(header) - len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")
@@ -53,10 +54,10 @@ func ActiveMissionsMenuIntro(m *Menu) {
 }
 
 func init() {
-	ActiveMissionsMenu = Menu{
+	ActiveMissionsMenu = types.Menu{
 		Name:    "Active Missions",
 		Intro:   ActiveMissionsMenuIntro,
 		Options: nil, // set by BuildActiveMissionsMenuOptions
-		Back:    func() { CurrentMenu = &CompanyMenu },
+		Back:    func() { globals.CurrentMenu = &CompanyMenu },
 	}
 }

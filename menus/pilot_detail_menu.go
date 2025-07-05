@@ -1,17 +1,21 @@
 package menus
 
-import "fmt"
+import (
+	"fmt"
+	"startrader/globals"
+	"startrader/types"
+)
 
-var selectedDetailPilot *Pilot
+var selectedDetailPilot *types.Pilot
 
-func PilotDetailMenuIntro(m *Menu) {
+func PilotDetailMenuIntro(m *types.Menu) {
 	if selectedDetailPilot == nil {
 		fmt.Println("\rNo pilot selected.")
 		return
 	}
 	fmt.Println("\r----------------------------------------------------------------------------")
 	header := "Pilot Details:"
-	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
+	moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
 	fmt.Printf("\r%s%*s%s\n\r", header, 76 - len(header) - len(moneyHeader), "", moneyHeader)
 fmt.Printf("\rPilot: %s\n", selectedDetailPilot.Name)
 	fmt.Printf("\rPrice: $%d\n", selectedDetailPilot.Price)
@@ -32,24 +36,24 @@ fmt.Printf("\rPilot: %s\n", selectedDetailPilot.Name)
 
 func PilotDetailBack() {
 	BuildCompanyPilotsMenuOptions()
-	CurrentMenu = &CompanyPilotsMenu
+	globals.CurrentMenu = &CompanyPilotsMenu
 }
 
 func ShowPilotDetailMenu() {
 	PilotDetailMenu.Options = BuildPilotDetailMenuOptions()
-	CurrentMenu = &PilotDetailMenu
+	globals.CurrentMenu = &PilotDetailMenu
 }
 
-func BuildPilotDetailMenuOptions() []MenuItem {
-	options := []MenuItem{}
+func BuildPilotDetailMenuOptions() []types.MenuItem {
+	options := []types.MenuItem{}
 	if selectedDetailPilot != nil {
 		if selectedDetailPilot.AssignedShip == nil {
-			options = append(options, MenuItem{Name: "Assign to Ship", Callback: ShowUnassignedShipsMenu})
+			options = append(options, types.MenuItem{Name: "Assign to Ship", Callback: ShowUnassignedShipsMenu})
 		} else {
-			options = append(options, MenuItem{Name: "Unassign from Ship", Callback: UnassignPilotFromShip})
+			options = append(options, types.MenuItem{Name: "Unassign from Ship", Callback: UnassignPilotFromShip})
 		}
 	}
-	options = append(options, MenuItem{Name: "Back", Callback: PilotDetailBack})
+	options = append(options, types.MenuItem{Name: "Back", Callback: PilotDetailBack})
 	return options
 }
 
@@ -77,10 +81,10 @@ func UnassignPilotFromShip() {
 	ShowPilotDetailMenu()
 }
 
-var PilotDetailMenu Menu
+var PilotDetailMenu types.Menu
 
 func init() {
-	PilotDetailMenu = Menu{
+	PilotDetailMenu = types.Menu{
 		Name:    "Pilot Detail",
 		Intro:   PilotDetailMenuIntro,
 		Options: nil, // Set dynamically

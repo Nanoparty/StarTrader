@@ -2,11 +2,13 @@ package menus
 
 import (
 	"fmt"
+	"startrader/globals"
+	"startrader/types"
 )
 
-var MissionCompleteMenu Menu
+var MissionCompleteMenu types.Menu
 
-func MissionCompleteMenuIntro(m *Menu) {
+func MissionCompleteMenuIntro(m *types.Menu) {
 	if selectedActiveMission == nil {
 		fmt.Println("\rNo mission selected.")
 		return
@@ -21,7 +23,7 @@ func MissionCompleteMenuIntro(m *Menu) {
 
 func MissionCompleteConfirm() {
 	if selectedActiveMission != nil && selectedActiveMissionShip != nil && selectedActiveMission.Status == "Complete" {
-		CompanyMoney += selectedActiveMission.Payout
+		globals.Company.Money += selectedActiveMission.Payout
 		if selectedActiveMissionShip.AssignedPilot != nil {
 			selectedActiveMissionShip.AssignedPilot.AssignedMission = nil
 			selectedActiveMissionShip.AssignedPilot.Status = "Idle"
@@ -31,17 +33,17 @@ func MissionCompleteConfirm() {
 		selectedActiveMission.Status = "Redeemed"
 	}
 	BuildActiveMissionsMenuOptions()
-	CurrentMenu = &ActiveMissionsMenu
+	globals.CurrentMenu = &ActiveMissionsMenu
 }
 
-func MissionCompleteMenuOptions() []MenuItem {
-	return []MenuItem{
+func MissionCompleteMenuOptions() []types.MenuItem {
+	return []types.MenuItem{
 		{Name: "Confirm", Callback: MissionCompleteConfirm},
 	}
 }
 
 func init() {
-	MissionCompleteMenu = Menu{
+	MissionCompleteMenu = types.Menu{
 		Name:    "Mission Complete",
 		Intro:   MissionCompleteMenuIntro,
 		Options: MissionCompleteMenuOptions(),

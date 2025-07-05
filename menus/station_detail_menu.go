@@ -2,28 +2,31 @@ package menus
 
 import (
 	"fmt"
+	"startrader/globals"
+	"startrader/types"
+	"startrader/utils"
 )
 
-var selectedDetailStation *Station
+var selectedDetailStation *types.Station
 
-func StationDetailMenuIntro(m *Menu) {
+func StationDetailMenuIntro(m *types.Menu) {
 	if selectedDetailStation == nil {
 		fmt.Println("\rNo station selected.")
 		return
 	}
 	// Generate missions if this is the first visit
 	if len(selectedDetailStation.Missions) == 0 {
-		selectedDetailStation.Missions = GenerateRandomMissionList(6, selectedDetailStation.RelationshipLevel)
+		selectedDetailStation.Missions = utils.GenerateRandomMissionList(6, selectedDetailStation.RelationshipLevel)
 	}
 	// Generate ships for sale if this is the first visit
 	if len(selectedDetailStation.ShipsForSale) == 0 {
-		selectedDetailStation.ShipsForSale = GenerateRandomShipList(5, selectedDetailStation.RelationshipLevel)
+		selectedDetailStation.ShipsForSale = utils.GenerateRandomShipList(5, selectedDetailStation.RelationshipLevel)
 	}
 	// Generate pilots for sale if this is the first visit
 	if len(selectedDetailStation.PilotsForSale) == 0 {
-		selectedDetailStation.PilotsForSale = GenerateRandomPilotList(5, selectedDetailStation.RelationshipLevel)
+		selectedDetailStation.PilotsForSale = utils.GenerateRandomPilotList(5, selectedDetailStation.RelationshipLevel)
 	}
-	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
+	moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	header := fmt.Sprintf("Station: %s", selectedDetailStation.Name)
 	fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
@@ -46,21 +49,21 @@ func StationDetailInfo() {
 	// TODO: Implement station information view
 }
 
-var StationDetailMenuOptions = []MenuItem{
+var StationDetailMenuOptions = []types.MenuItem{
 	{Name: "Ships", Callback: StationDetailShips},
 	{Name: "Pilots", Callback: StationDetailPilots},
 	{Name: "Missions", Callback: StationDetailMissions},
-	{Name: "Information", Callback: func() { CurrentMenu = &StationInformationMenu }},
-	{Name: "Back", Callback: func() { CurrentMenu = &StationsMenu }},
+	{Name: "Information", Callback: func() { globals.CurrentMenu = &StationInformationMenu }},
+	{Name: "Back", Callback: func() { globals.CurrentMenu = &StationsMenu }},
 }
 
-var StationDetailMenu Menu
+var StationDetailMenu types.Menu
 
 func init() {
-	StationDetailMenu = Menu{
+	StationDetailMenu = types.Menu{
 		Name:    "Station Detail",
 		Intro:   StationDetailMenuIntro,
 		Options: StationDetailMenuOptions,
-		Back:    func() { CurrentMenu = &StationsMenu },
+		Back:    func() { globals.CurrentMenu = &StationsMenu },
 	}
 }

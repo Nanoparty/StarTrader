@@ -2,6 +2,8 @@ package menus
 
 import (
 	"fmt"
+	"startrader/globals"
+	"startrader/types"
 )
 
 func ShowStationPilotsStoreMenu() {
@@ -10,34 +12,34 @@ func ShowStationPilotsStoreMenu() {
 		return
 	}
 	BuildStationPilotsStoreMenuOptions()
-	CurrentMenu = &PilotsStoreMenu
+	globals.CurrentMenu = &PilotsStoreMenu
 }
 
 func BuildStationPilotsStoreMenuOptions() {
-	PilotsStoreMenuOptions = []MenuItem{}
+	PilotsStoreMenuOptions = []types.MenuItem{}
 	for i, pilot := range selectedDetailStation.PilotsForSale {
 		pilotCopy := pilot // avoid closure capture bug
 		menuName := fmt.Sprintf("%-20s | $%-7d | %-8d | %-8d | %-8d", pilotCopy.Name, pilotCopy.Price, pilotCopy.TransportSkill, pilotCopy.CombatSkill, pilotCopy.MiningSkill)
-		PilotsStoreMenuOptions = append(PilotsStoreMenuOptions, MenuItem{
+		PilotsStoreMenuOptions = append(PilotsStoreMenuOptions, types.MenuItem{
 			Name:     menuName,
 			Callback: PilotPurchasePrompt(pilotCopy, i),
 		})
 	}
-	PilotsStoreMenuOptions = append(PilotsStoreMenuOptions, MenuItem{Name: "Back", Callback: PilotsStoreBack})
+	PilotsStoreMenuOptions = append(PilotsStoreMenuOptions, types.MenuItem{Name: "Back", Callback: PilotsStoreBack})
 	PilotsStoreMenu.Options = PilotsStoreMenuOptions
 }
 
-var PilotsStoreMenuOptions []MenuItem
-var PilotsStoreMenu Menu
-var selectedPilot *Pilot
+var PilotsStoreMenuOptions []types.MenuItem
+var PilotsStoreMenu types.Menu
+var selectedPilot *types.Pilot
 
 func init() {
-	PilotsStoreMenu = Menu{
+	PilotsStoreMenu = types.Menu{
 		Name:  "Pilots Store Menu",
 		Intro: PilotsStoreMenuIntro,
 	}
 
-	PilotPurchaseMenu = Menu{
+	PilotPurchaseMenu = types.Menu{
 		Name:    "Hire Pilot?",
 		Intro:   PilotPurchaseMenuIntro,
 		Options: PilotPurchaseMenuOptions(),
@@ -45,8 +47,8 @@ func init() {
 	}
 }
 
-func PilotsStoreMenuIntro(m *Menu) {
-	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
+func PilotsStoreMenuIntro(m *types.Menu) {
+	moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	header := "Pilots for Hire:"
 	fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
@@ -60,20 +62,20 @@ func PilotsStoreMenuIntro(m *Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
 }
 
-func PilotPurchasePrompt(pilot Pilot, i int) func() {
+func PilotPurchasePrompt(pilot types.Pilot, i int) func() {
 	return func() {
 		selectedPilot = &selectedDetailStation.PilotsForSale[i]
-		CurrentMenu = &PilotPurchaseMenu
+		globals.CurrentMenu = &PilotPurchaseMenu
 	}
 }
 
 func PilotPurchaseYes() {
 	if selectedPilot != nil {
-		if CompanyMoney < selectedPilot.Price {
+		if globals.Company.Money < selectedPilot.Price {
 			ShowWarningMenu("Insufficient funds to hire this pilot.", &PilotPurchaseMenu)
 			return
 		}
-		CompanyMoney -= selectedPilot.Price
+		globals.Company.Money -= selectedPilot.Price
 		// --- Station Relationship Logic ---
 		if selectedDetailStation != nil {
 			selectedDetailStation.MoneySpent += selectedPilot.Price
@@ -104,17 +106,17 @@ func PilotPurchaseYes() {
 	}
 	selectedPilot = nil
 	BuildPilotsStoreMenuOptions()
-	CurrentMenu = &PilotsStoreMenu
+	globals.CurrentMenu = &PilotsStoreMenu
 }
 
 func PilotPurchaseNo() {
 	selectedPilot = nil
-	CurrentMenu = &PilotsStoreMenu
+	globals.CurrentMenu = &PilotsStoreMenu
 }
 
-func PilotPurchaseMenuIntro(m *Menu) {
+func PilotPurchaseMenuIntro(m *types.Menu) {
 	if selectedPilot != nil {
-		moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
+		moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
 		fmt.Println("\r----------------------------------------------------------------------------")
 		header := "Pilot Details:"
 		fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
@@ -131,36 +133,36 @@ func PilotPurchaseMenuIntro(m *Menu) {
 	}
 }
 
-func PilotPurchaseMenuOptions() []MenuItem {
-	return []MenuItem{
+func PilotPurchaseMenuOptions() []types.MenuItem {
+	return []types.MenuItem{
 		{Name: "Yes", Callback: PilotPurchaseYes},
 		{Name: "No", Callback: PilotPurchaseNo},
 	}
 }
 
-var PilotPurchaseMenu Menu
+var PilotPurchaseMenu types.Menu
 
 func BuildPilotsStoreMenuOptions() {
-	PilotsStoreMenuOptions = []MenuItem{}
+	PilotsStoreMenuOptions = []types.MenuItem{}
 	for i, pilot := range selectedDetailStation.PilotsForSale {
 		pilotCopy := pilot // avoid closure capture bug
 		menuName := fmt.Sprintf("%-20s | $%-7d | %-8d | %-8d | %-8d", pilotCopy.Name, pilotCopy.Price, pilotCopy.TransportSkill, pilotCopy.CombatSkill, pilotCopy.MiningSkill)
-		PilotsStoreMenuOptions = append(PilotsStoreMenuOptions, MenuItem{
+		PilotsStoreMenuOptions = append(PilotsStoreMenuOptions, types.MenuItem{
 			Name:     menuName,
 			Callback: PilotPurchasePrompt(pilotCopy, i),
 		})
 	}
-	PilotsStoreMenuOptions = append(PilotsStoreMenuOptions, MenuItem{Name: "Back", Callback: PilotsStoreBack})
+	PilotsStoreMenuOptions = append(PilotsStoreMenuOptions, types.MenuItem{Name: "Back", Callback: PilotsStoreBack})
 	PilotsStoreMenu.Options = PilotsStoreMenuOptions
 }
 
 func PilotsStoreBack() {
-	CurrentMenu = &StationDetailMenu
+	globals.CurrentMenu = &StationDetailMenu
 }
 
 func init() {
-	PilotsStoreMenuOptions = []MenuItem{}
-	PilotsStoreMenu = Menu{
+	PilotsStoreMenuOptions = []types.MenuItem{}
+	PilotsStoreMenu = types.Menu{
 		Name:    "Pilots Store Menu",
 		Intro:   PilotsStoreMenuIntro,
 		Options: PilotsStoreMenuOptions, // will be set dynamically

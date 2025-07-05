@@ -2,33 +2,35 @@ package menus
 
 import (
 	"fmt"
+	"startrader/globals"
+	"startrader/types"
 )
 
-var StationMissionMenu Menu
+var StationMissionMenu types.Menu
 
-func BuildStationMissionMenuOptions() []MenuItem {
-	options := []MenuItem{}
+func BuildStationMissionMenuOptions() []types.MenuItem {
+	options := []types.MenuItem{}
 	if selectedDetailStation != nil {
 		for i, mission := range selectedDetailStation.Missions {
 			missionCopy := mission // avoid closure capture bug
 			label := fmt.Sprintf("%-3d | %-22s | %-9s | %d min %d sec | $%-7d", i+1, missionCopy.ShortName, missionCopy.Type, missionCopy.Minutes, missionCopy.Seconds, missionCopy.Payout)
-			options = append(options, MenuItem{
+			options = append(options, types.MenuItem{
 				Name: label,
-				Callback: func(m Mission) func() {
+				Callback: func(m types.Mission) func() {
 					return func() {
 						selectedStationMission = &m
-						CurrentMenu = &StationMissionDetailMenu
+						globals.CurrentMenu = &StationMissionDetailMenu
 					}
 				}(missionCopy),
 			})
 		}
 	}
-	options = append(options, MenuItem{Name: "Back", Callback: func() { CurrentMenu = &StationDetailMenu }})
+	options = append(options, types.MenuItem{Name: "Back", Callback: func() { globals.CurrentMenu = &StationDetailMenu }})
 	return options
 }
 
-func StationMissionMenuIntro(m *Menu) {
-	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
+func StationMissionMenuIntro(m *types.Menu) {
+	moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	header := "Available Missions:"
 	fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
@@ -39,14 +41,14 @@ func StationMissionMenuIntro(m *Menu) {
 
 func ShowStationMissionMenu() {
 	StationMissionMenu.Options = BuildStationMissionMenuOptions()
-	CurrentMenu = &StationMissionMenu
+	globals.CurrentMenu = &StationMissionMenu
 }
 
 func init() {
-	StationMissionMenu = Menu{
+	StationMissionMenu = types.Menu{
 		Name:    "Station Missions",
 		Intro:   StationMissionMenuIntro,
 		Options: nil, // Set dynamically
-		Back:    func() { CurrentMenu = &StationDetailMenu },
+		Back:    func() { globals.CurrentMenu = &StationDetailMenu },
 	}
 }
