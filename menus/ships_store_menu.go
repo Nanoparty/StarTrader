@@ -29,8 +29,10 @@ func BuildStationShipsStoreMenuOptions() {
 }
 
 func ShipsStoreMenuIntro(m *Menu) {
+	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
 	fmt.Println("\r----------------------------------------------------------------------------")
-	fmt.Println("\rSpaceships for Sale:")
+	header := "Spaceships for Sale:"
+	fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Printf("\r%-20s | %-10s | %-10s\n", "Name", "Type", "Price")
 	fmt.Println("\r----------------------------------------------------------------------------")
@@ -57,6 +59,24 @@ func ShipPurchaseYes() {
 			return
 		}
 		CompanyMoney -= selectedShip.Price
+		// --- Station Relationship Logic ---
+		if selectedDetailStation != nil {
+			selectedDetailStation.MoneySpent += selectedShip.Price
+			// Add experience as a float for every $1000 spent (partial allowed)
+			expGained := float64(selectedShip.Price) / 1000.0
+			selectedDetailStation.Experience += expGained
+			// Level up if experience threshold reached
+			for selectedDetailStation.Experience >= selectedDetailStation.ExpToNextLevel {
+				selectedDetailStation.RelationshipLevel++
+				selectedDetailStation.Experience -= selectedDetailStation.ExpToNextLevel
+				// Increase required experience for next level by 50%
+				selectedDetailStation.ExpToNextLevel *= 1.5
+				if selectedDetailStation.ExpToNextLevel < 1.0 {
+					selectedDetailStation.ExpToNextLevel = 1.0
+				}
+			}
+		}
+		// --- End Station Relationship Logic ---
 		shipCopy := *selectedShip
 		CompanyShips = append(CompanyShips, shipCopy)
 		// Remove the purchased ship from ShipsForSale
@@ -92,8 +112,10 @@ func ShipPurchaseNo() {
 
 func ShipPurchaseMenuIntro(m *Menu) {
 	if selectedShip != nil {
+		moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
 		fmt.Println("\r----------------------------------------------------------------------------")
-		fmt.Println("\rShip Details:")
+		header := "Ship Details:"
+		fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
 		fmt.Println("\r----------------------------------------------------------------------------")
 		fmt.Printf("\rName: %s\n", selectedShip.Name)
 		fmt.Printf("\rType: %s\n", selectedShip.Type)

@@ -15,8 +15,10 @@ var UnknownSectors = []string{
 }
 
 func SectorsMenuIntro(m *Menu) {
+	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
 	fmt.Println("\r----------------------------------------------------------------------------")
-	fmt.Println("\rKnown Sectors:")
+	header := "Known Sectors:"
+	fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")
 }
 

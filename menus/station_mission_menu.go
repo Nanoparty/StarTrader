@@ -28,8 +28,10 @@ func BuildStationMissionMenuOptions() []MenuItem {
 }
 
 func StationMissionMenuIntro(m *Menu) {
+	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
 	fmt.Println("\r----------------------------------------------------------------------------")
-	fmt.Println("\rAvailable Missions:")
+	header := "Available Missions:"
+	fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Printf("\r%-3s | %-22s | %-9s | %-8s | %-8s\n", "#", "Name", "Type", "Duration", "Payout")
 	fmt.Println("\r----------------------------------------------------------------------------")

@@ -18,8 +18,10 @@ var UnknownStations = map[string][]string{
 var SelectedSector string
 
 func StationsMenuIntro(m *Menu) {
+	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
 	fmt.Println("\r----------------------------------------------------------------------------")
-	fmt.Printf("\rStations in %s:\n", SelectedSector)
+	header := fmt.Sprintf("Stations in %s:", SelectedSector)
+	fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")
 }
 

@@ -23,8 +23,10 @@ func StationDetailMenuIntro(m *Menu) {
 	if len(selectedDetailStation.PilotsForSale) == 0 {
 		selectedDetailStation.PilotsForSale = GenerateRandomPilotList(5, selectedDetailStation.RelationshipLevel)
 	}
+	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
 	fmt.Println("\r----------------------------------------------------------------------------")
-	fmt.Printf("\rStation: %s\n", selectedDetailStation.Name)
+	header := fmt.Sprintf("Station: %s", selectedDetailStation.Name)
+	fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")
 }
 

@@ -12,8 +12,10 @@ func StationMissionDetailMenuIntro(m *Menu) {
 		fmt.Println("\rNo mission selected.")
 		return
 	}
+	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
 	fmt.Println("\r----------------------------------------------------------------------------")
-	fmt.Println("\rMission Details:")
+	header := "Mission Details:"
+	fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Printf("\rName:        %s\n", selectedStationMission.ShortName)
 	fmt.Printf("\rType:        %s\n", selectedStationMission.Type)

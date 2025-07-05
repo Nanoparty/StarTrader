@@ -46,8 +46,10 @@ func init() {
 }
 
 func PilotsStoreMenuIntro(m *Menu) {
+	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
 	fmt.Println("\r----------------------------------------------------------------------------")
-	fmt.Println("\rPilots for Hire:")
+	header := "Pilots for Hire:"
+	fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	if selectedDetailStation == nil || len(selectedDetailStation.PilotsForSale) == 0 {
 		fmt.Println("\rThere are no more pilots available for hire at this point in time.")
@@ -72,6 +74,24 @@ func PilotPurchaseYes() {
 			return
 		}
 		CompanyMoney -= selectedPilot.Price
+		// --- Station Relationship Logic ---
+		if selectedDetailStation != nil {
+			selectedDetailStation.MoneySpent += selectedPilot.Price
+			// Add experience as a float for every $1000 spent (partial allowed)
+			expGained := float64(selectedPilot.Price) / 1000.0
+			selectedDetailStation.Experience += expGained
+			// Level up if experience threshold reached
+			for selectedDetailStation.Experience >= selectedDetailStation.ExpToNextLevel {
+				selectedDetailStation.RelationshipLevel++
+				selectedDetailStation.Experience -= selectedDetailStation.ExpToNextLevel
+				// Increase required experience for next level by 50%
+				selectedDetailStation.ExpToNextLevel *= 1.5
+				if selectedDetailStation.ExpToNextLevel < 1.0 {
+					selectedDetailStation.ExpToNextLevel = 1.0
+				}
+			}
+		}
+		// --- End Station Relationship Logic ---
 		pilotCopy := *selectedPilot
 		CompanyPilots = append(CompanyPilots, pilotCopy)
 		// Remove the purchased pilot from PilotsForSale
@@ -94,6 +114,17 @@ func PilotPurchaseNo() {
 
 func PilotPurchaseMenuIntro(m *Menu) {
 	if selectedPilot != nil {
+		moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
+		fmt.Println("\r----------------------------------------------------------------------------")
+		header := "Pilot Details:"
+		fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
+		fmt.Println("\r----------------------------------------------------------------------------")
+		fmt.Printf("\rName:      %s\n", selectedPilot.Name)
+		fmt.Printf("\rPrice:     $%d\n", selectedPilot.Price)
+		fmt.Printf("\rTransport: %d\n", selectedPilot.TransportSkill)
+		fmt.Printf("\rCombat:    %d\n", selectedPilot.CombatSkill)
+		fmt.Printf("\rMining:    %d\n", selectedPilot.MiningSkill)
+		fmt.Println("\r----------------------------------------------------------------------------")
 		fmt.Printf("\rHire %s for $%d?\n", selectedPilot.Name, selectedPilot.Price)
 	} else {
 		fmt.Println("\rNo pilot selected.")

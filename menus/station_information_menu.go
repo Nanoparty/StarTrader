@@ -7,13 +7,16 @@ func StationInformationMenuIntro(m *Menu) {
 		fmt.Println("\rNo station selected.")
 		return
 	}
+	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
 	fmt.Println("\r----------------------------------------------------------------------------")
-	fmt.Println("\rStation Details:")
+	header := "Station Details:"
+	fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Printf("\rStation: %s\n", selectedDetailStation.Name)
 	fmt.Printf("\rRelationship Level: %d\n", selectedDetailStation.RelationshipLevel)
 	fmt.Printf("\rMissions Completed: %d\n", selectedDetailStation.MissionsCompleted)
 	fmt.Printf("\rMoney Spent: $%d\n", selectedDetailStation.MoneySpent)
+	fmt.Printf("\rExperience: %.1f / %.1f\n", selectedDetailStation.Experience, selectedDetailStation.ExpToNextLevel)
 	fmt.Println("\r----------------------------------------------------------------------------")
 }
 
