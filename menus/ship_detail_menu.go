@@ -10,7 +10,9 @@ func ShipDetailMenuIntro(m *Menu) {
 		return
 	}
 	fmt.Println("\r----------------------------------------------------------------------------")
-	fmt.Println("\rShip Details:")
+		header := "Ship Details:"
+	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
+	fmt.Printf("\r%s%*s%s\n\r", header, 76 - len(header) - len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Printf("\rShip: %s\n", selectedDetailShip.Name)
 	fmt.Printf("\rType: %s\n", selectedDetailShip.Type)

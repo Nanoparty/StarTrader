@@ -31,8 +31,10 @@ func BuildActiveMissionsMenuOptions() {
 }
 
 func ActiveMissionsMenuIntro(m *Menu) {
+	header := "Active Missions: " + globals.CompanyName
+	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
 	fmt.Println("\r----------------------------------------------------------------------------")
-	fmt.Println("\rActive Missions: " + globals.CompanyName)
+	fmt.Printf("\r%s%*s%s\n\r", header, 76 - len(header) - len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")
 
 	activeCount := 0

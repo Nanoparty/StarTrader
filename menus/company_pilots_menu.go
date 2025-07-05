@@ -10,8 +10,10 @@ var CompanyPilotOptions []MenuItem
 var CompanyPilotsMenu Menu
 
 func CompanyPilotsIntro(m *Menu) {
+	header := globals.CompanyName + " Pilots:"
+	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
 	fmt.Println("\r----------------------------------------------------------------------------")
-	fmt.Println("\r" + globals.CompanyName + " Pilots:")
+	fmt.Printf("\r%s%*s%s\n\r", header, 76 - len(header) - len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	if len(CompanyPilots) == 0 {
 		fmt.Println("\rThere are currently no pilots.\n\r")

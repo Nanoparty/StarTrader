@@ -10,8 +10,10 @@ var CompanyShipOptions []MenuItem
 var CompanyShipsMenu Menu
 
 func CompanyShipsIntro(m *Menu) {
+	header := globals.CompanyName + " Ships:"
+	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
 	fmt.Println("\r----------------------------------------------------------------------------")
-	fmt.Println("\r" + globals.CompanyName + " Ships:")
+	fmt.Printf("\r%s%*s%s\n\r", header, 76 - len(header) - len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	if len(CompanyShips) == 0 {
 		fmt.Println("\rThere are currently no ships.\n\r")

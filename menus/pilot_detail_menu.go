@@ -10,7 +10,10 @@ func PilotDetailMenuIntro(m *Menu) {
 		return
 	}
 	fmt.Println("\r----------------------------------------------------------------------------")
-	fmt.Printf("\rPilot: %s\n", selectedDetailPilot.Name)
+	header := "Pilot Details:"
+	moneyHeader := fmt.Sprintf("$%d", CompanyMoney)
+	fmt.Printf("\r%s%*s%s\n\r", header, 76 - len(header) - len(moneyHeader), "", moneyHeader)
+fmt.Printf("\rPilot: %s\n", selectedDetailPilot.Name)
 	fmt.Printf("\rPrice: $%d\n", selectedDetailPilot.Price)
 	fmt.Printf("\rSkills (T/C/M): %d/%d/%d\n", selectedDetailPilot.TransportSkill, selectedDetailPilot.CombatSkill, selectedDetailPilot.MiningSkill)
 	if selectedDetailPilot.AssignedShip != nil {
