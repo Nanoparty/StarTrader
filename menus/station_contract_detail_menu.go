@@ -14,7 +14,7 @@ func StationContractDetailMenuIntro(m *types.Menu) {
 		fmt.Println("\rNo contract selected.")
 		return
 	}
-	moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
+	moneyHeader := fmt.Sprintf("Credits: $%d", globals.Company.Money)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	header := "Contract Details:"
 	fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)

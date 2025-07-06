@@ -18,7 +18,7 @@ type CompanyConfig struct {
 
 var Company = CompanyConfig {
 	Name: "Default Company",
-	Money: 20000,
+	Money: 20000000,
 	Ships: []types.Ship{},
 	Pilots: []types.Pilot{},
 }

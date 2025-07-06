@@ -33,7 +33,7 @@ func BuildActiveContractsMenuOptions() {
 
 func ActiveContractsMenuIntro(m *types.Menu) {
 	header := "Active Contracts: " + globals.Company.Name
-	moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
+	moneyHeader := fmt.Sprintf("Credits: $%d", globals.Company.Money)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Printf("\r%s%*s%s\n\r", header, 76 - len(header) - len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")

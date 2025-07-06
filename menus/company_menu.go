@@ -32,7 +32,7 @@ func QuitGame() {
 
 func CompanyMenuIntro(m *types.Menu) {
 	header := "Company Menu: " + globals.Company.Name
-	moneyHeader := fmt.Sprintf("%s%d", "$", globals.Company.Money)
+	moneyHeader := fmt.Sprintf("Credits: $%d", globals.Company.Money)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Printf("\r%s%*s%s\n\r", header, 76 - len(header) - len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")

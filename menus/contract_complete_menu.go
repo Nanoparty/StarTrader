@@ -22,7 +22,13 @@ func ContractCompleteMenuIntro(m *types.Menu) {
 }
 
 func ContractCompleteConfirm() {
-	if selectedActiveContract != nil && selectedActiveContractShip != nil && selectedActiveContract.Status == "Complete" {
+	if selectedActiveContract == nil {
+		globals.CurrentMenu = &ActiveContractsMenu
+		return
+	}
+
+	// Process contract completion and payment
+	if selectedActiveContractShip != nil && selectedActiveContract.Status == "Complete" {
 		globals.Company.Money += selectedActiveContract.Payout
 		if selectedActiveContractShip.AssignedPilot != nil {
 			selectedActiveContractShip.AssignedPilot.AssignedContract = nil
@@ -32,6 +38,30 @@ func ContractCompleteConfirm() {
 		selectedActiveContractShip.Status = "Idle"
 		selectedActiveContract.Status = "Redeemed"
 	}
+
+	// Handle relationship experience and level-ups
+	if selectedActiveContract.OriginStation != nil {
+		duration := float64(selectedActiveContract.Minutes*60 + selectedActiveContract.Seconds)
+		experienceGained := (duration / 600) * 100 // 10 minutes = 100 exp
+
+		selectedActiveContract.OriginStation.Experience += experienceGained
+		selectedActiveContract.OriginStation.ContractsCompleted++
+
+		if selectedActiveContract.OriginStation.Experience >= selectedActiveContract.OriginStation.ExpToNextLevel {
+			selectedActiveContract.OriginStation.RelationshipLevel++
+			selectedActiveContract.OriginStation.Experience = 0
+			selectedActiveContract.OriginStation.ExpToNextLevel *= 1.5
+
+			stationName := selectedActiveContract.OriginStation.Name
+			newLevel := selectedActiveContract.OriginStation.RelationshipLevel
+			message := fmt.Sprintf("Congratulations! Your relationship with %s has reached level %d!\n\rBetter Ships, Pilots, and Contracts are now available there.", stationName, newLevel)
+			
+			BuildActiveContractsMenuOptions()
+			ShowWarningMenu(message, &ActiveContractsMenu)
+			return
+		}
+	}
+
 	BuildActiveContractsMenuOptions()
 	globals.CurrentMenu = &ActiveContractsMenu
 }

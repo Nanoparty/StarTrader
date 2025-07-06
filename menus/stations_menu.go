@@ -9,10 +9,12 @@ import (
 var SelectedSector *types.Sector
 
 func StationsMenuIntro(m *types.Menu) {
-	moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
+	moneyHeader := fmt.Sprintf("Credits: $%d", globals.Company.Money)
 	fmt.Println("\r----------------------------------------------------------------------------")
-	header := fmt.Sprintf("types.Stations in %s:", SelectedSector.Name)
+	header := fmt.Sprintf("Stations in %s:", SelectedSector.Name)
 	fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
+	fmt.Println("\r----------------------------------------------------------------------------")
+	fmt.Printf("\r%-30s | %s\n", "Station", "Relationship Level")
 	fmt.Println("\r----------------------------------------------------------------------------")
 }
 
@@ -34,7 +36,7 @@ func ShowStationsMenu(sector *types.Sector) {
 		station := &sector.Stations[i]
 		if station.IsKnown {
 			StationsMenuOptions = append(StationsMenuOptions, types.MenuItem{
-				Name:     station.Name,
+				Name:     fmt.Sprintf("%-30s | %d", station.Name, station.RelationshipLevel),
 				Callback: StationSelected(station),
 			})
 		}

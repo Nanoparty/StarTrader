@@ -17,7 +17,7 @@ func ActiveContractDetailMenuIntro(m *types.Menu) {
 	}
 	fmt.Println("\r----------------------------------------------------------------------------")
 		header := "Contract Details:"
-	moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
+	moneyHeader := fmt.Sprintf("Credits: $%d", globals.Company.Money)
 	fmt.Printf("\r%s%*s%s\n\r", header, 76 - len(header) - len(moneyHeader), "", moneyHeader)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Printf("\rName: %s\n", selectedActiveContract.ShortName)

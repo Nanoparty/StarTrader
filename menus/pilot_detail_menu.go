@@ -15,7 +15,7 @@ func PilotDetailMenuIntro(m *types.Menu) {
 	}
 	fmt.Println("\r----------------------------------------------------------------------------")
 	header := "Pilot Details:"
-	moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
+	moneyHeader := fmt.Sprintf("Credits: $%d", globals.Company.Money)
 	fmt.Printf("\r%s%*s%s\n\r", header, 76 - len(header) - len(moneyHeader), "", moneyHeader)
 fmt.Printf("\rPilot: %s\n", selectedDetailPilot.Name)
 	fmt.Printf("\rPrice: $%d\n", selectedDetailPilot.Price)

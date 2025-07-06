@@ -31,7 +31,7 @@ func BuildStationShipsStoreMenuOptions() {
 }
 
 func ShipsStoreMenuIntro(m *types.Menu) {
-	moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
+	moneyHeader := fmt.Sprintf("Credits: $%d", globals.Company.Money)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	header := "Spaceships for Sale:"
 	fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
@@ -55,6 +55,7 @@ func ShipPurchasePrompt(ship types.Ship) func() {
 }
 
 func ShipPurchaseYes() {
+	leveledUp := false
 	if selectedShip != nil {
 		if globals.Company.Money < selectedShip.Price {
 			ShowWarningMenu("Insufficient funds to purchase this ship.", &ShipPurchaseMenu)
@@ -64,7 +65,7 @@ func ShipPurchaseYes() {
 		// --- Station Relationship Logic ---
 		if selectedDetailStation != nil {
 			selectedDetailStation.MoneySpent += selectedShip.Price
-			// Add experience as a float for every $1000 spent (partial allowed)
+			// Add experience as a float for every $100 spent
 			expGained := float64(selectedShip.Price) / 1000.0
 			selectedDetailStation.Experience += expGained
 			// Level up if experience threshold reached
@@ -76,6 +77,7 @@ func ShipPurchaseYes() {
 				if selectedDetailStation.ExpToNextLevel < 1.0 {
 					selectedDetailStation.ExpToNextLevel = 1.0
 				}
+				leveledUp = true
 			}
 		}
 		// --- End Station Relationship Logic ---
@@ -91,7 +93,15 @@ func ShipPurchaseYes() {
 	}
 	selectedShip = nil
 	BuildShipsStoreMenuOptions()
-	globals.CurrentMenu = &ShipsStoreMenu
+
+	if leveledUp {
+		stationName := selectedDetailStation.Name
+		newLevel := selectedDetailStation.RelationshipLevel
+		message := fmt.Sprintf("Congratulations! Your relationship with %s has reached level %d!\n\rBetter Ships, Pilots, and Contracts are now available there.", stationName, newLevel)
+		ShowWarningMenu(message, &ShipsStoreMenu)
+	} else {
+		globals.CurrentMenu = &ShipsStoreMenu
+	}
 }
 
 func BuildShipsStoreMenuOptions() {
@@ -114,7 +124,7 @@ func ShipPurchaseNo() {
 
 func ShipPurchaseMenuIntro(m *types.Menu) {
 	if selectedShip != nil {
-		moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
+		moneyHeader := fmt.Sprintf("Credits: $%d", globals.Company.Money)
 		fmt.Println("\r----------------------------------------------------------------------------")
 		header := "Ship Details:"
 		fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)

@@ -16,7 +16,7 @@ func StationDetailMenuIntro(m *types.Menu) {
 	}
 	// Generate contracts if this is the first visit
 	if len(selectedDetailStation.Contracts) == 0 {
-		selectedDetailStation.Contracts = utils.GenerateRandomContractList(6, selectedDetailStation.RelationshipLevel)
+		selectedDetailStation.Contracts = utils.GenerateRandomContractList(6, selectedDetailStation.RelationshipLevel, selectedDetailStation)
 	}
 	// Generate ships for sale if this is the first visit
 	if len(selectedDetailStation.ShipsForSale) == 0 {
@@ -26,7 +26,7 @@ func StationDetailMenuIntro(m *types.Menu) {
 	if len(selectedDetailStation.PilotsForSale) == 0 {
 		selectedDetailStation.PilotsForSale = utils.GenerateRandomPilotList(5, selectedDetailStation.RelationshipLevel)
 	}
-	moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
+	moneyHeader := fmt.Sprintf("Credits: $%d", globals.Company.Money)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	header := fmt.Sprintf("Station: %s", selectedDetailStation.Name)
 	fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)

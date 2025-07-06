@@ -48,7 +48,7 @@ func init() {
 }
 
 func PilotsStoreMenuIntro(m *types.Menu) {
-	moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
+	moneyHeader := fmt.Sprintf("Credits: $%d", globals.Company.Money)
 	fmt.Println("\r----------------------------------------------------------------------------")
 	header := "Pilots for Hire:"
 	fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)
@@ -70,6 +70,7 @@ func PilotPurchasePrompt(pilot types.Pilot, i int) func() {
 }
 
 func PilotPurchaseYes() {
+	leveledUp := false
 	if selectedPilot != nil {
 		if globals.Company.Money < selectedPilot.Price {
 			ShowWarningMenu("Insufficient funds to hire this pilot.", &PilotPurchaseMenu)
@@ -79,8 +80,8 @@ func PilotPurchaseYes() {
 		// --- Station Relationship Logic ---
 		if selectedDetailStation != nil {
 			selectedDetailStation.MoneySpent += selectedPilot.Price
-			// Add experience as a float for every $1000 spent (partial allowed)
-			expGained := float64(selectedPilot.Price) / 1000.0
+			// Add experience as a float for every $100 spent
+			expGained := float64(selectedPilot.Price) / 100.0
 			selectedDetailStation.Experience += expGained
 			// Level up if experience threshold reached
 			for selectedDetailStation.Experience >= selectedDetailStation.ExpToNextLevel {
@@ -91,6 +92,7 @@ func PilotPurchaseYes() {
 				if selectedDetailStation.ExpToNextLevel < 1.0 {
 					selectedDetailStation.ExpToNextLevel = 1.0
 				}
+				leveledUp = true
 			}
 		}
 		// --- End Station Relationship Logic ---
@@ -106,7 +108,15 @@ func PilotPurchaseYes() {
 	}
 	selectedPilot = nil
 	BuildPilotsStoreMenuOptions()
-	globals.CurrentMenu = &PilotsStoreMenu
+
+	if leveledUp {
+		stationName := selectedDetailStation.Name
+		newLevel := selectedDetailStation.RelationshipLevel
+		message := fmt.Sprintf("Congratulations! Your relationship with %s has reached level %d!\n\rBetter Ships, Pilots, and Contracts are now available there.", stationName, newLevel)
+		ShowWarningMenu(message, &PilotsStoreMenu)
+	} else {
+		globals.CurrentMenu = &PilotsStoreMenu
+	}
 }
 
 func PilotPurchaseNo() {
@@ -116,7 +126,7 @@ func PilotPurchaseNo() {
 
 func PilotPurchaseMenuIntro(m *types.Menu) {
 	if selectedPilot != nil {
-		moneyHeader := fmt.Sprintf("$%d", globals.Company.Money)
+		moneyHeader := fmt.Sprintf("Credits: $%d", globals.Company.Money)
 		fmt.Println("\r----------------------------------------------------------------------------")
 		header := "Pilot Details:"
 		fmt.Printf("\r%s%*s%s\n", header, 76-len(header)-len(moneyHeader), "", moneyHeader)

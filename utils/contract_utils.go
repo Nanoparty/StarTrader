@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func GenerateMiningContract(level int) types.Contract {
+func GenerateMiningContract(level int, station *types.Station) types.Contract {
 	if level < 1 {
 		level = 1
 	} else if level > 10 {
@@ -50,10 +50,11 @@ func GenerateMiningContract(level int) types.Contract {
 		Minutes:     minutes,
 		Seconds:     seconds,
 		Status:      "Idle",
+		OriginStation: station,
 	}
 }
 
-func GenerateCombatContract(level int) types.Contract {
+func GenerateCombatContract(level int, station *types.Station) types.Contract {
 	if level < 1 {
 		level = 1
 	} else if level > 10 {
@@ -97,10 +98,11 @@ func GenerateCombatContract(level int) types.Contract {
 		Minutes:     minutes,
 		Seconds:     seconds,
 		Status:      "Idle",
+		OriginStation: station,
 	}
 }
 
-func GenerateRandomContract(level int) types.Contract {
+func GenerateRandomContract(level int, station *types.Station) types.Contract {
 	if level < 1 {
 		level = 1
 	} else if level > 10 {
@@ -109,15 +111,15 @@ func GenerateRandomContract(level int) types.Contract {
 	typeIdx := rand.Intn(3)
 	switch typeIdx {
 	case 0:
-		return GenerateMiningContract(level)
+		return GenerateMiningContract(level, station)
 	case 1:
-		return GenerateCombatContract(level)
+		return GenerateCombatContract(level, station)
 	default:
-		return GenerateTransportContract(level)
+		return GenerateTransportContract(level, station)
 	}
 }
 
-func GenerateTransportContract(level int) types.Contract {
+func GenerateTransportContract(level int, station *types.Station) types.Contract {
 	if level < 1 {
 		level = 1
 	} else if level > 10 {
@@ -161,14 +163,15 @@ func GenerateTransportContract(level int) types.Contract {
 		Minutes:     minutes,
 		Seconds:     seconds,
 		Status:      "Idle",
+		OriginStation: station,
 	}
 }
 
 // GenerateRandomContractList returns a slice of n random contracts at the given level.
-func GenerateRandomContractList(n int, level int) []types.Contract {
+func GenerateRandomContractList(n int, level int, station *types.Station) []types.Contract {
 	contracts := make([]types.Contract, 0, n)
 	for i := 0; i < n; i++ {
-		contracts = append(contracts, GenerateRandomContract(level))
+		contracts = append(contracts, GenerateRandomContract(level, station))
 	}
 	return contracts
 }

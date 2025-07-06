@@ -42,6 +42,7 @@ type Contract struct {
 	Minutes     int    // Duration minutes (0-4)
 	Seconds     int    // Duration seconds (0-59)
 	Status      string // "Idle", "In Progress", or "Complete"
+	OriginStation *Station
 	// Location   Location // Uncomment if Location is needed and defined
 }
 
