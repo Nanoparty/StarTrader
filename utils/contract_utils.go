@@ -6,13 +6,13 @@ import (
 	"time"
 )
 
-func GenerateMiningMission(level int) types.Mission {
+func GenerateMiningContract(level int) types.Contract {
 	if level < 1 {
 		level = 1
 	} else if level > 10 {
 		level = 10
 	}
-	miningMissions := []struct{ Name, Desc string }{
+	miningContracts := []struct{ Name, Desc string }{
 		{"Asteroid Extraction", "Extract valuable minerals from a dense asteroid field."},
 		{"Survey and Sample", "Survey a new asteroid and collect mineral samples."},
 		{"Deep Core Drill", "Drill deep into a large asteroid for rare ores."},
@@ -35,13 +35,13 @@ func GenerateMiningMission(level int) types.Mission {
 		{"Experimental Mining", "Test new mining tech in the field."},
 	}
 	rand.Seed(time.Now().UnixNano())
-	idx := rand.Intn(len(miningMissions))
+	idx := rand.Intn(len(miningContracts))
 	durationSec := rand.Intn(300) // 0 to 299 seconds
 	minutes := durationSec / 60
 	seconds := durationSec % 60
 	payout := (minutes*60 + seconds) * 20 * level // payout scaled to seconds and level
-	selected := miningMissions[idx]
-	return types.Mission{
+	selected := miningContracts[idx]
+	return types.Contract{
 		ShortName:   selected.Name,
 		Description: selected.Desc,
 		Type:        "Mining",
@@ -53,13 +53,13 @@ func GenerateMiningMission(level int) types.Mission {
 	}
 }
 
-func GenerateCombatMission(level int) types.Mission {
+func GenerateCombatContract(level int) types.Contract {
 	if level < 1 {
 		level = 1
 	} else if level > 10 {
 		level = 10
 	}
-	combatMissions := []struct{ Name, Desc string }{
+	combatContracts := []struct{ Name, Desc string }{
 		{"Pirate Hunt", "Track down and eliminate a pirate ship in the sector."},
 		{"Convoy Escort", "Defend a civilian convoy from raiders."},
 		{"Station Defense", "Help defend a station under attack."},
@@ -68,7 +68,7 @@ func GenerateCombatMission(level int) types.Mission {
 		{"Hostage Rescue", "Rescue hostages from a hijacked ship."},
 		{"Minefield Clearance", "Clear a dangerous minefield for safe passage."},
 		{"Enemy Recon", "Scout enemy positions and report back."},
-		{"Sabotage Run", "Sabotage enemy supplies on a covert mission."},
+		{"Sabotage Run", "Sabotage enemy supplies on a covert contract."},
 		{"Fleet Action", "Join a fleet battle against a rival faction."},
 		{"Smuggler Intercept", "Intercept and disable a smuggler's ship."},
 		{"Blockade Runner", "Break through an enemy blockade."},
@@ -82,13 +82,13 @@ func GenerateCombatMission(level int) types.Mission {
 		{"Security Sweep", "Conduct a security sweep of a dangerous area."},
 	}
 	rand.Seed(time.Now().UnixNano())
-	idx := rand.Intn(len(combatMissions))
+	idx := rand.Intn(len(combatContracts))
 	durationSec := rand.Intn(300) // 0 to 299 seconds
 	minutes := durationSec / 60
 	seconds := durationSec % 60
 	payout := (minutes*60 + seconds) * 20 * level // payout scaled to seconds and level
-	selected := combatMissions[idx]
-	return types.Mission{
+	selected := combatContracts[idx]
+	return types.Contract{
 		ShortName:   selected.Name,
 		Description: selected.Desc,
 		Type:        "Combat",
@@ -100,7 +100,7 @@ func GenerateCombatMission(level int) types.Mission {
 	}
 }
 
-func GenerateRandomMission(level int) types.Mission {
+func GenerateRandomContract(level int) types.Contract {
 	if level < 1 {
 		level = 1
 	} else if level > 10 {
@@ -109,21 +109,21 @@ func GenerateRandomMission(level int) types.Mission {
 	typeIdx := rand.Intn(3)
 	switch typeIdx {
 	case 0:
-		return GenerateMiningMission(level)
+		return GenerateMiningContract(level)
 	case 1:
-		return GenerateCombatMission(level)
+		return GenerateCombatContract(level)
 	default:
-		return GenerateTransportMission(level)
+		return GenerateTransportContract(level)
 	}
 }
 
-func GenerateTransportMission(level int) types.Mission {
+func GenerateTransportContract(level int) types.Contract {
 	if level < 1 {
 		level = 1
 	} else if level > 10 {
 		level = 10
 	}
-	transportMissions := []struct{ Name, Desc string }{
+	transportContracts := []struct{ Name, Desc string }{
 		{"Medical Supply Run", "Deliver urgent medical supplies to a nearby outpost."},
 		{"VIP Transport", "Escort a VIP passenger to another station safely."},
 		{"Cargo Delivery", "Transport valuable cargo across the sector."},
@@ -146,13 +146,13 @@ func GenerateTransportMission(level int) types.Mission {
 		{"Emergency Parts", "Rush critical ship parts to a repair crew."},
 	}
 	rand.Seed(time.Now().UnixNano())
-	idx := rand.Intn(len(transportMissions))
+	idx := rand.Intn(len(transportContracts))
 	durationSec := rand.Intn(300) // 0 to 299 seconds
 	minutes := durationSec / 60
 	seconds := durationSec % 60
 	payout := (minutes*60 + seconds) * 20 * level // payout scaled to total seconds and level
-	selected := transportMissions[idx]
-	return types.Mission{
+	selected := transportContracts[idx]
+	return types.Contract{
 		ShortName:   selected.Name,
 		Description: selected.Desc,
 		Type:        "Transport",
@@ -164,11 +164,11 @@ func GenerateTransportMission(level int) types.Mission {
 	}
 }
 
-// GenerateRandomMissionList returns a slice of n random missions at the given level.
-func GenerateRandomMissionList(n int, level int) []types.Mission {
-	missions := make([]types.Mission, 0, n)
+// GenerateRandomContractList returns a slice of n random contracts at the given level.
+func GenerateRandomContractList(n int, level int) []types.Contract {
+	contracts := make([]types.Contract, 0, n)
 	for i := 0; i < n; i++ {
-		missions = append(missions, GenerateRandomMission(level))
+		contracts = append(contracts, GenerateRandomContract(level))
 	}
-	return missions
+	return contracts
 }

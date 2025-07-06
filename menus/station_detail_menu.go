@@ -14,9 +14,9 @@ func StationDetailMenuIntro(m *types.Menu) {
 		fmt.Println("\rNo station selected.")
 		return
 	}
-	// Generate missions if this is the first visit
-	if len(selectedDetailStation.Missions) == 0 {
-		selectedDetailStation.Missions = utils.GenerateRandomMissionList(6, selectedDetailStation.RelationshipLevel)
+	// Generate contracts if this is the first visit
+	if len(selectedDetailStation.Contracts) == 0 {
+		selectedDetailStation.Contracts = utils.GenerateRandomContractList(6, selectedDetailStation.RelationshipLevel)
 	}
 	// Generate ships for sale if this is the first visit
 	if len(selectedDetailStation.ShipsForSale) == 0 {
@@ -41,8 +41,8 @@ func StationDetailPilots() {
 	ShowStationPilotsStoreMenu()
 }
 
-func StationDetailMissions() {
-	ShowStationMissionMenu()
+func StationDetailContracts() {
+	ShowStationContractMenu()
 }
 
 func StationDetailInfo() {
@@ -52,7 +52,7 @@ func StationDetailInfo() {
 var StationDetailMenuOptions = []types.MenuItem{
 	{Name: "Ships", Callback: StationDetailShips},
 	{Name: "Pilots", Callback: StationDetailPilots},
-	{Name: "Missions", Callback: StationDetailMissions},
+	{Name: "Contracts", Callback: StationDetailContracts},
 	{Name: "Information", Callback: func() { globals.CurrentMenu = &StationInformationMenu }},
 	{Name: "Back", Callback: func() { globals.CurrentMenu = &StationsMenu }},
 }

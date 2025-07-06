@@ -30,15 +30,15 @@ func StartRepl(cfg *globals.Config){
 refreshStop := make(chan struct{})
 
 for {
-	// If we're in the Active Missions menu, start a ticker to refresh every second
-	if globals.CurrentMenu == &menus.ActiveMissionsMenu {
+	// If we're in the Active Contracts menu, start a ticker to refresh every second
+	if globals.CurrentMenu == &menus.ActiveContractsMenu {
 		if refreshTicker == nil {
 			refreshTicker = time.NewTicker(time.Second)
 			go func() {
 				for {
 					select {
 					case <-refreshTicker.C:
-						menus.BuildActiveMissionsMenuOptions()
+						menus.BuildActiveContractsMenuOptions()
 						clearScreen()
 						globals.CurrentMenu.Intro(globals.CurrentMenu)
 						for i, option := range globals.CurrentMenu.Options {
@@ -57,7 +57,7 @@ for {
 			}()
 		}
 		// Always refresh options before showing
-		menus.BuildActiveMissionsMenuOptions()
+		menus.BuildActiveContractsMenuOptions()
 	}
 
 	clearScreen()
@@ -73,8 +73,8 @@ for {
 	var b = make([]byte, 3)
 	os.Stdin.Read(b)
 
-	// If we leave the Active Missions menu, stop the ticker
-	if refreshTicker != nil && globals.CurrentMenu != &menus.ActiveMissionsMenu {
+	// If we leave the Active Contracts menu, stop the ticker
+	if refreshTicker != nil && globals.CurrentMenu != &menus.ActiveContractsMenu {
 		refreshStop <- struct{}{}
 	}
 
@@ -97,7 +97,6 @@ for {
 				OptionSelection(&globals.CurrentMenu.Selected)
 			case 68: // Left arrow
 				globals.CurrentMenu.Back()
-				// menus.CurrentMenu.Selected = 0
 			}
 		} else if b[0] == 13 || b[0] == 67 { // Enter key
 			clearScreen()
@@ -109,7 +108,6 @@ for {
 
 func OptionSelection(selected *int) {
 	globals.CurrentMenu.Options[*selected].Callback()
-	// menus.CurrentMenu.Selected = 0
 }
 
 

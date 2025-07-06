@@ -18,7 +18,7 @@ func StationInformationMenuIntro(m *types.Menu) {
 	fmt.Println("\r----------------------------------------------------------------------------")
 	fmt.Printf("\rStation: %s\n", selectedDetailStation.Name)
 	fmt.Printf("\rRelationship Level: %d\n", selectedDetailStation.RelationshipLevel)
-	fmt.Printf("\rMissions Completed: %d\n", selectedDetailStation.MissionsCompleted)
+	fmt.Printf("\rContracts Completed: %d\n", selectedDetailStation.ContractsCompleted)
 	fmt.Printf("\rMoney Spent: $%d\n", selectedDetailStation.MoneySpent)
 	fmt.Printf("\rExperience: %.1f / %.1f\n", selectedDetailStation.Experience, selectedDetailStation.ExpToNextLevel)
 	fmt.Println("\r----------------------------------------------------------------------------")

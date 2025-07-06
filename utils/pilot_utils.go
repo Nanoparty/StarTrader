@@ -52,7 +52,7 @@ func GenerateRandomPilot(level int) types.Pilot {
 		MiningSkill: mining,
 		Level: level,
 		AssignedShip: nil,
-		AssignedMission: nil,
+		AssignedContract: nil,
 		Status: "Idle",
 	}
 }

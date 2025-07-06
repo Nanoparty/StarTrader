@@ -26,14 +26,14 @@ type Station struct {
 	RelationshipLevel  int
 	Experience         float64
 	ExpToNextLevel     float64
-	Missions           []Mission
+	Contracts           []Contract
 	ShipsForSale       []Ship
 	PilotsForSale      []Pilot
-	MissionsCompleted  int
+	ContractsCompleted  int
 	MoneySpent         int
 }
 
-type Mission struct {
+type Contract struct {
 	ShortName   string
 	Description string
 	Type        string // "Mining", "Transport", or "Combat"
@@ -62,7 +62,7 @@ type Ship struct {
 	Level           int // Starts at 1, max 10
 	AssignedPilot   *Pilot
 	Status          string // "Idle", "In Progress", or "Complete"
-	AssignedMission *Mission // nil if not assigned
+	AssignedContract *Contract // nil if not assigned
 }
 
 type Pilot struct {
@@ -73,6 +73,6 @@ type Pilot struct {
 	MiningSkill     int
 	Level           int // 1 to 10
 	AssignedShip    *Ship
-	AssignedMission *Mission // nil if not assigned
+	AssignedContract *Contract // nil if not assigned
 	Status          string // "Idle", "In Progress", or "Complete"
 }

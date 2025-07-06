@@ -24,7 +24,7 @@ func MainMenuIntro(m *types.Menu) {
 
 
 func NewGame() {
-	utils.StartMissionTimers()
+	utils.StartContractTimers()
 	globals.CurrentMenu = &CompanyMenu
 }
 

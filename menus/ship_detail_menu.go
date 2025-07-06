@@ -30,10 +30,10 @@ func ShipDetailMenuIntro(m *types.Menu) {
 	} else {
 		fmt.Println("\rAssigned Pilot: None")
 	}
-	if selectedDetailShip.AssignedMission != nil {
-		fmt.Printf("\rAssigned Mission: %s (%s)\n", selectedDetailShip.AssignedMission.ShortName, selectedDetailShip.AssignedMission.Type)
+	if selectedDetailShip.AssignedContract != nil {
+		fmt.Printf("\rAssigned Contract: %s (%s)\n", selectedDetailShip.AssignedContract.ShortName, selectedDetailShip.AssignedContract.Type)
 	} else {
-		fmt.Println("\rAssigned Mission: None")
+		fmt.Println("\rAssigned Contract: None")
 	}
 	fmt.Printf("\rStatus: %s\n", selectedDetailShip.Status)
 	fmt.Println("\r----------------------------------------------------------------------------")
@@ -50,7 +50,7 @@ func BuildShipDetailMenuOptions() []types.MenuItem {
 		if selectedDetailShip.AssignedPilot == nil {
 			options = append(options, types.MenuItem{Name: "Assign Pilot", Callback: ShowUnassignedPilotsMenu})
 		} else {
-			options = append(options, types.MenuItem{Name: "Unassign Pilot", Callback: UnassignPilotFromShipInShipDetail}) // Prevents unassign if ship or pilot has a mission
+			options = append(options, types.MenuItem{Name: "Unassign Pilot", Callback: UnassignPilotFromShipInShipDetail}) // Prevents unassign if ship or pilot has a contract
 		}
 	}
 	options = append(options, types.MenuItem{Name: "Back", Callback: ShipDetailBack})
@@ -59,13 +59,13 @@ func BuildShipDetailMenuOptions() []types.MenuItem {
 
 func UnassignPilotFromShipInShipDetail() {
 	if selectedDetailShip != nil && selectedDetailShip.AssignedPilot != nil {
-		// Prevent unassign if ship or pilot has an assigned mission
-		if selectedDetailShip.AssignedMission != nil {
-			ShowWarningMenu("Cannot unassign: Ship is on a mission.", &ShipDetailMenu)
+		// Prevent unassign if ship or pilot has an assigned contract
+		if selectedDetailShip.AssignedContract != nil {
+			ShowWarningMenu("Cannot unassign: Ship is on a contract.", &ShipDetailMenu)
 			return
 		}
-		if selectedDetailShip.AssignedPilot.AssignedMission != nil {
-			ShowWarningMenu("Cannot unassign: Pilot is on a mission.", &ShipDetailMenu)
+		if selectedDetailShip.AssignedPilot.AssignedContract != nil {
+			ShowWarningMenu("Cannot unassign: Pilot is on a contract.", &ShipDetailMenu)
 			return
 		}
 		pilot := selectedDetailShip.AssignedPilot

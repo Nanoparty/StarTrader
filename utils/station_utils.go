@@ -9,10 +9,10 @@ func NewStation(name string) *types.Station {
 		RelationshipLevel: 1,
 		Experience: 0.0,
 		ExpToNextLevel: 100.0,
-		Missions:           []types.Mission{},
+		Contracts:           []types.Contract{},
 		ShipsForSale:       []types.Ship{},
 		PilotsForSale:      []types.Pilot{},
-		MissionsCompleted:  0,
+		ContractsCompleted:  0,
 		MoneySpent:         0,
 	}
 }

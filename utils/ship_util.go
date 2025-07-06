@@ -66,7 +66,7 @@ func GenerateRandomShip(level int) types.Ship {
 		Level:         level,
 		AssignedPilot: nil,
 		Status:        "Idle",
-		AssignedMission: nil,
+		AssignedContract: nil,
 	}
 }
 
