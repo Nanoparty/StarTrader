@@ -82,26 +82,38 @@ for {
 			break
 		}
 
-		// Handle arrow keys
-		if b[0] == 27 && b[1] == 91 {
-			switch b[2] {
-			case 65: // Up arrow
-				if globals.CurrentMenu.Selected > 0 {
-					globals.CurrentMenu.Selected--
-				}
-			case 66: // Down arrow
-				if globals.CurrentMenu.Selected < len(globals.CurrentMenu.Options)-1 {
-					globals.CurrentMenu.Selected++
-				}
-			case 67: // Right arrow
-				OptionSelection(&globals.CurrentMenu.Selected)
-			case 68: // Left arrow
+		if globals.CurrentMenu.Name == "Create Company" {
+			if b[0] == 13 { // Enter
+				menus.CreateCompany()
+			} else if b[0] == 127 { // Backspace
+				menus.BackspaceCompanyName()
+			} else if b[0] == 27 && b[1] == 91 && b[2] == 68 { // Left Arrow for back
 				globals.CurrentMenu.Back()
+			} else if b[0] >= 32 && b[0] <= 126 { // Printable ASCII
+				menus.AppendToCompanyName(string(b[0]))
 			}
-		} else if b[0] == 13 || b[0] == 67 { // Enter key
-			clearScreen()
-			OptionSelection(&globals.CurrentMenu.Selected)
-			continue
+		} else {
+			// Handle arrow keys
+			if b[0] == 27 && b[1] == 91 {
+				switch b[2] {
+				case 65: // Up arrow
+					if globals.CurrentMenu.Selected > 0 {
+						globals.CurrentMenu.Selected--
+					}
+				case 66: // Down arrow
+					if globals.CurrentMenu.Selected < len(globals.CurrentMenu.Options)-1 {
+						globals.CurrentMenu.Selected++
+					}
+				case 67: // Right arrow
+					OptionSelection(&globals.CurrentMenu.Selected)
+				case 68: // Left arrow
+					globals.CurrentMenu.Back()
+				}
+			} else if b[0] == 13 || b[0] == 67 { // Enter key
+				clearScreen()
+				OptionSelection(&globals.CurrentMenu.Selected)
+				continue
+			}
 		}
 	}
 }
